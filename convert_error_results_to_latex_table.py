@@ -122,7 +122,7 @@ for i in range(len(ID)):
 
             if len(row)>6:
                 ##### get cstat and dof
-                if row[-1]=='d.o.f.' and float(row[3])<cstat:
+                if row[-1]=='d.o.f.' and float(row[3])<float(cstat):
                     cstat=row[3]
                     dof=row[5]
                 ##### get parameter best-fit
