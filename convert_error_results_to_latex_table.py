@@ -9,34 +9,28 @@ def precision(value, left_uncertainty,right_uncertainty):
         absolute_left_uncertainty_collect=[]
         absolute_right_uncertainty_collect=[]
         for i,j,k in zip(value,left_uncertainty,right_uncertainty):
-            v=float(i);l_err=float(j);r_err=float(k)
-            uncertainty=min([l_err,r_err])
-            if l_err<0 and r_err<0: #### if reach the upper or lower limit, set the uncertainty to zero
-                rounded_value=0
-                absolute_left_uncertainty=0
-                absolute_right_uncertainty=0
-            elif uncertainty>1:    #### if the uncertainty is larger than unity, choose the precision to digits
-                rounded_value = int(round(v, -int(math.floor(math.log10(uncertainty))) +1))
-                absolute_left_uncertainty = int(round(l_err, -int(math.floor(math.log10(l_err)))+1 ))
-                absolute_right_uncertainty = int(round(r_err, -int(math.floor(math.log10(r_err)))+1 ))
-            elif uncertainty>0:   
+            v=float(i);l_err=-float(j);r_err=float(k)
+            uncertainty=min([abs(l_err),abs(r_err)])
+            if uncertainty>=1:    ####if the uncertainty is larger than unity, choose the precision to digits
+                rounded_value = int(round(v, 1))
+                absolute_left_uncertainty = int(round(l_err, 1 ))
+                absolute_right_uncertainty = int(round(r_err, 1 ))
+            else:
                 rounded_value = round(v, -int(math.floor(math.log10(uncertainty))) )
                 absolute_left_uncertainty = round(l_err, -int(math.floor(math.log10(l_err))) )
                 absolute_right_uncertainty = round(r_err, -int(math.floor(math.log10(r_err))) )
-            else:           
-                if  l_err<0:
-                    rounded_value = round(v, -int(math.floor(math.log10(r_err))) )
-                    absolute_left_uncertainty = 0
-                    absolute_right_uncertainty = round(r_err, -int(math.floor(math.log10(r_err))) )
-                if  r_err<0:
-                    rounded_value = round(v, -int(math.floor(math.log10(l_err))) )
-                    absolute_left_uncertainty = round(l_err, -int(math.floor(math.log10(l_err))) )
-                    absolute_right_uncertainty = 0
+            if l_err==v and r_err==-v: ####if reach the upper or lower limit, set the uncertainty to zero
+                rounded_value=0
+                absolute_left_uncertainty=0
+                absolute_right_uncertainty=0   
+            elif l_err==v:
+                absolute_left_uncertainty = 0
+            elif  r_err==-v:
+                absolute_right_uncertainty = 0
             rounded_value_collect+=[rounded_value]
             absolute_left_uncertainty_collect+=[absolute_left_uncertainty]
             absolute_right_uncertainty_collect+=[absolute_right_uncertainty]
         return rounded_value_collect,absolute_left_uncertainty_collect,absolute_right_uncertainty_collect
-
 
 #### parameter names+units    feel free to add any parameters and units you want
 p_name={
@@ -109,8 +103,8 @@ for i in range(len(ID)):
             row=l.split()
             #### get errors
             if len(row)>=2 and (row[1] in index_fp) and row[-1][-1]==')':
-                left=row[4].split(',')[0][2:]
-                right=row[4].split(',')[1][:-1]
+                left=row[-1].split(',')[0][1:]
+                right=row[-1].split(',')[1][:-1]
                 if row[1] in error_index: #### check if the error result of the parameter has been saved, if yes, replace with new one
                     index_temp=error_index.index(row[1])
                     left_err_fp[index_temp]=left
@@ -137,9 +131,16 @@ for i in range(len(ID)):
                         best_fp+=[row[-3]] 
                         component_index+=[row[2]]
 
-
-    best_fp_rounded,left_err_fp_rounded,right_err_fp_rounded=precision(best_fp, left_err_fp,right_err_fp) ###round results
-    
+    ##### since some parameters during the error will not appear, re-order the error results according to the best-fit values
+    left_error_fp_ordered=[]
+    right_error_fp_ordered=[]
+    for o in range(len(index_fp)):
+        temp=error_index.index(index_fp[o])
+        left_error_fp_ordered+=[left_err_fp[temp]]
+        right_error_fp_ordered+=[right_err_fp[temp]]
+        
+    best_fp_rounded,left_err_fp_rounded,right_err_fp_rounded=precision(best_fp, left_error_fp_ordered,right_error_fp_ordered) ###round results
+   
     ##### combine results of parameters
     parameters=['$'+str(i)+'^{+'+str(k)+'}'+'_{-'+str(j)+'}'+'$' for i,j,k in zip(best_fp_rounded,left_err_fp_rounded,right_err_fp_rounded)]
     
