@@ -206,11 +206,21 @@ for i in range(avg_length):
             add=' '
         collect_mid+=' & '+add
     collect=collect_begin+collect_mid+' \\'+'\\'
+    
+    ######add the horizontal line between components
+    hl='\\hline'
+    if i>0:
+        if baseline_para_component_index[i]!=baseline_para_component_index[i-1]: 
+            collect_all+=[hl]
+    elif i==0:
+        collect_all+=[hl]
     collect_all+=[collect]
 
-#### output
+####output
 with open(read_dir+'/model_table.txt', "w") as file:
     file.write(title+"\n")
     for string in collect_all:
         file.write(string + "\n")
+    file.write("\\hline")
     file.write(statistic+"\n")
+    file.write("\\hline")
