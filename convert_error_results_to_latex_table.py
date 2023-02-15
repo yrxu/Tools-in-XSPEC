@@ -17,8 +17,8 @@ def precision(value, left_uncertainty,right_uncertainty):
                 absolute_right_uncertainty = int(round(r_err, 1 ))
             else:
                 rounded_value = round(v, -int(math.floor(math.log10(uncertainty))) )
-                absolute_left_uncertainty = round(l_err, -int(math.floor(math.log10(l_err))) )
-                absolute_right_uncertainty = round(r_err, -int(math.floor(math.log10(r_err))) )
+                absolute_left_uncertainty = round(l_err, -int(math.floor(math.log10(abs(l_err)))) )
+                absolute_right_uncertainty = round(r_err, -int(math.floor(math.log10(abs(r_err)))) )
             if l_err==v and r_err==-v: ####if reach the upper or lower limit, set the uncertainty to zero
                 rounded_value=0
                 absolute_left_uncertainty=0
