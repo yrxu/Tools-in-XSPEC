@@ -23,8 +23,9 @@ v_vals=np.logspace(np.log10(100),np.log10(100000),9)
 outfil="pion_xs.fits"
 
 
-Nvars=5  #number of variables
+
 varnames=["logxi","nh","gamma","v","omeg"]
+Nvars=len(varnames)  #number of variables
 lengths=[20,9,9,9,5]
 nmodels=np.prod(lengths)
 nmax=max(lengths)
