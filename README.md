@@ -10,4 +10,8 @@ convert_error_results_to_latex_table.py
 Automatically perform 'error' command in XSPEC for multiple spectra of the same source and save results into various .txt files (number=N_parameters): 
 output-error-results-in-several-spectra.sh
 
-
+Create a XSPEC-version table model from PION in SPEX, see SPEX-to-XSPEC directory:
+1. Use the PION model in SPEX to generate spectra with various parameters:
+PION-to-SPECTRA.py
+2. Collect generated spectra into a table model readable in XSPEC:
+gen_table_pion.py 
