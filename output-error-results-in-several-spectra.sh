@@ -23,7 +23,7 @@ nh_index=5  #### parameter index of nh
 
 logxi_result_file=${DIR}/logxi.txt
 echo "# ID logxi left_error right_error" > ${logxi_result_file}
-logxi_result_file_index=4  #### parameter index of logxi_result_file
+logxi_result_file_index=4  #### parameter index of logxi
 
 v_result_file=${DIR}/v.txt
 echo "# ID v left_error right_error" > ${v_result_file}
