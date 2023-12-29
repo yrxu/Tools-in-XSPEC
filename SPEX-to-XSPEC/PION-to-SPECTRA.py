@@ -15,6 +15,8 @@ os.makedirs(grid_dir)
 
 #os.mkdir(grid_dir)
 
+norm_po=1 #normalization of power-law; obtained by fitting a power-law component to X-ray spectra in SPEX, otherwise fitted NH will be incorrect.
+
 # ionization parameter grids logxi= -2 to 5
 logxi_vals=np.linspace(-2,5,20)
 # column density in the unit of cm^-2 range between 1e18 and 2e24 cm^-2
@@ -73,7 +75,8 @@ for xi in logxi_vals:
                                             "par 3 tau v 0.136",\
                                             "par 4 a v 1",\
                                             "par 4 tau v 0.01",\
-                                            "par 2 fcov v 0"]
+                                            "par 2 fcov v 0",\
+                                            "par 1 no v "+str(norm_po)]
                                             )+"\n"
 
                         variable_pars="\n".join(["par 2 xil v %s" % str(xi),\
