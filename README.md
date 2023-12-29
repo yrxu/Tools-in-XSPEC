@@ -21,10 +21,10 @@ Automatically perform 'error' command in XSPEC for multiple spectra of the same 
 
 Create an XSPEC-version table model from PION/XABS in SPEX, see SPEX-to-XSPEC directory:
 
-- 1. Use the PION/XABS model in SPEX to generate spectra with various parameters:
-PION/XABS-to-SPECTRA.py
-- 2. Collect generated spectra into a table model readable in XSPEC:
-gen_table_pion/xabs.py
+1. Use the PION/XABS model in SPEX to generate spectra with various parameters:
+- PION/XABS-to-SPECTRA.py
+2. Collect generated spectra into a table model readable in XSPEC:
+- gen_table_pion/xabs.py
 
 Cite Parker, Michael L. et al. 2019 when you use them.
 
