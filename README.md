@@ -9,7 +9,7 @@ Use photoionization absorption/emission model to search outflow solutions over m
 
 - XSPEC_absorption/emission_grid.sh
 
-Cite Xu, Y. et al. 2023 when you use them.
+Cite Xu, Yerong et al. 2023 when you use them.
 
 Convert results of 'error' command in XSPEC for multiple spectra of the same source into a table in LATEX language:
 
