@@ -3,10 +3,10 @@
 ###initials
 home_dir=$PWD                                        # Launching directory
 
-ID=(40  )  #names of spectra
+ID=( 01 02 03 04 )  #names of spectra
 length=`echo "${#ID[@]}-1" | bc` #number of spectra
 
-model_name="nthcomp+relxillCp" #model name / root name of the .xcm file
+model_name="nthcomp+relxillCp" #model name / root name of the .xcm file e.g. nthcomp+relxillCp_01.xcm
 model_plus_gaussian="constant*tbabs*zashift*(nthComp+relxillCp+gauss)" #the model included a Gaussian in XSPEC
 
 index_energy=24 #the index of the line energy in Gaussian model in XSPEC, then N_energy+1= index of line width, N_energy+2= index of normalization
@@ -14,17 +14,16 @@ index_width=$(($index_energy+1))
 index_norm=$(($index_energy+2))
 N_gauss=6 #the order of Gaussian in XSPEC model combination, here is the 6th component 
 
-#line_width=(500 1500 4500)  #scanned line width
-line_width=(4500)  #scanned line width
-#number_of_points=(2000 700 300) #number of scanned grids corresponding to line width
-number_of_points=(2) #number of scanned grids corresponding to line width
+line_width=(500 1500 4500)  #scanned line width
+number_of_points=(2000 700 300) #number of scanned grids corresponding to line width
+
 
 statistics=cstat #statistics used in XSPEC
 abundance=lpgs   #abundace used for Galactic absorption model i.e. TBabs
 Emin=0.4  # keV scanned energy band
 Emax=10.0  # keV 
 
-number_of_cores=4 #define Parallelisation parameters
+number_of_cores=4 # Define parallelization parameters
 echo "choosing number of cores =${number_of_cores}"
 
 ###start loop
