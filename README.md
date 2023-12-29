@@ -6,6 +6,7 @@ Gaussian_line_scan_routine_in_XSPEC.sh
 
 Use photoionization absorption/emission model to search outflow solutions over multiple spectra:
 XSPEC_absorption/emission_grid.sh
+
 Cite Xu, Y. et al. 2023 when you use them.
 
 Convert results of 'error' command in XSPEC for multiple spectra of the same source into a table in LATEX language:
@@ -19,6 +20,7 @@ Create an XSPEC-version table model from PION/XABS in SPEX, see SPEX-to-XSPEC di
 PION/XABS-to-SPECTRA.py
 2. Collect generated spectra into a table model readable in XSPEC:
 gen_table_pion/xabs.py
+
 Cite Parker, Michael L. et al. 2019 when you use them.
 
 
