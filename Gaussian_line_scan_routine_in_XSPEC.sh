@@ -17,7 +17,6 @@ N_gauss=6 #the order of Gaussian in XSPEC model combination, here is the 6th com
 line_width=(500 1500 4500)  #scanned line width
 number_of_points=(2000 700 300) #number of scanned grids corresponding to line width
 
-
 statistics=cstat #statistics used in XSPEC
 abundance=lpgs   #abundace used for Galactic absorption model i.e. TBabs
 Emin=0.4  # keV scanned energy band
