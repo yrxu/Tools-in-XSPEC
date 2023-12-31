@@ -7,7 +7,7 @@ Use a Gaussian line to search lines in spectra:
 
 Use photoionization absorption/emission model to search outflow solutions over multiple spectra:
 
-- XSPEC_absorption/emission_grid.sh (here use general-version of PION with Omeg=1)
+- XSPEC_absorption/emission_grid.sh (here the emission uses a general-version of PION with Omeg=1)
 
 Cite Xu, Yerong et al. 2023 when you use them.
 
