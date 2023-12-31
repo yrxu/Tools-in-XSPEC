@@ -1,5 +1,6 @@
 #!/bin/bash
-export OMP_NUM_THREADS=4
+number_of_cores=4 # Define parallelization parameters
+
 mkdir ${PWD}/simulation
 DIR_home=${PWD}/simulation
 mkdir ${DIR_home}/MC_spectrum
@@ -12,11 +13,11 @@ res_spectrum=${DIR_home}/res
 num_simulations=10000
 max_item=`echo "${number}-1" | bc`
 
-min_energy=0.4
-max_energy=1.77
+Emin=0.4  ### RGS energy band: 0.4-1.77 keV
+Emax=1.77
 
-xspec_startup_xcm=${PWD}/zdiskbb+relxilllpCp.xcm  #change the localtion of data into global location not e.g. ../../analysis
-################save real residual spectrum
+xspec_startup_xcm=${PWD}/zdiskbb+relxilllpCp.xcm  #change the location of data into global location not e.g. ../../analysis
+################cross-correlate residual and model spectrum
 linewidth=(0 100 500 1000 1500 2000 5000)
 for a in 0 1 2 3 4 5 6
 do
@@ -40,7 +41,7 @@ for i in range(num_model):
 	y_model=np.array(df[i+1])
 	cor=np.correlate(y,y_model)
 	correlate.append(cor)
-en=np.logspace(np.log10(${min_energy}),np.log10(${max_energy}),num=num_model)
+en=np.logspace(np.log10(${Emin}),np.log10(${Emax}),num=num_model)
 np.savetxt('${DIR_home}/'+'raw_correlate_real_lw'+str(${linewidth[$a]})+'.txt',np.column_stack([en,np.array(correlate)]))
 
 sim_res_file='${DIR_home}/merge_res_'+str(${num_simulations})+'.txt'
