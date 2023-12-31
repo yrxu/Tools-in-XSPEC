@@ -1,16 +1,16 @@
 #!/bin/bash
-export OMP_NUM_THREADS=4
+number_of_cores=4 # Define parallelization parameters
 mkdir ${PWD}/simulation
 DIR_home=${PWD}/simulation
-mkdir ${DIR_home}/MC_spectrum
-mkdir ${DIR_home}/res
+mkdir ${DIR_home}/MC_spectrum    ### simulated spectra
+mkdir ${DIR_home}/res            ###residual spectra
 MC_spectrum=${DIR_home}/MC_spectrum
 res_spectrum=${DIR_home}/res
 
-number=10000
+number=10000                ##number of simulated spectra
 max_item=`echo "${number}-1" | bc`
 
-xspec_startup_xcm=${PWD}/zdiskbb+relxilllpCp.xcm  #change the localtion of data into global location not e.g. ../../analysis
+xspec_startup_xcm=${PWD}/zdiskbb+relxilllpCp.xcm  #startup .xcm file, caution!!! change the location of data into global location not e.g. ../../analysis
 ################save real residual spectrum
 routine_sim=${DIR_home}/simulated_${number}_res_spectrum.xcm
 echo "start to make the routine file for simulation"
