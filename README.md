@@ -7,7 +7,7 @@ Use a Gaussian line to search lines in spectra:
 
 Use photoionization absorption/emission model to search outflow solutions over multiple spectra:
 
-- XSPEC_absorption/emission_grid.sh
+- XSPEC_absorption/emission_grid.sh (here use general-version of PION with Omeg=1)
 
 Cite Xu, Yerong et al. 2023 when you use them.
 
@@ -25,6 +25,7 @@ Create an XSPEC-version table model from PION/XABS in SPEX, see SPEX-to-XSPEC di
 - PION/XABS-to-SPECTRA.py
 2. Collect generated spectra into a table model readable in XSPEC:
 - gen_table_pion/xabs.py
+- The general versions that do not need pre-calculated SEDs and the ionization balances are in the SPEX-to-XSPEC/general-version/ directory. Be cautious: a cut-off power-law component, instead of a specific SED, is used as an approximation.
 
 Cite Parker, Michael L. et al. 2019 when you use them.
 
