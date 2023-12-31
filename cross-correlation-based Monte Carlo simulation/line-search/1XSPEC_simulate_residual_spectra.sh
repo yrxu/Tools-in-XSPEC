@@ -1,5 +1,4 @@
 #!/bin/bash
-number_of_cores=4 # Define parallelization parameters
 
 mkdir ${PWD}/simulation
 DIR_home=${PWD}/simulation
