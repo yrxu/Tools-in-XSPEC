@@ -1,5 +1,6 @@
 #!/bin/bash
-export OMP_NUM_THREADS=4
+number_of_cores=4 # Define parallelization parameters
+
 mkdir ${PWD}/simulation
 DIR_home=${PWD}/simulation
 mkdir ${DIR_home}/MC_spectrum
@@ -7,24 +8,21 @@ mkdir ${DIR_home}/model
 MC_spectrum=${DIR_home}/MC_spectrum
 model_dir=${DIR_home}/model
 
+Emin=0.4 #keV
+Emax=1.77 #keV RGS energy band: 0.4-1.77 keV
 
-
-
-min_energy=0.4
-max_energy=1.77
-
-xspec_startup_xcm=${PWD}/zdiskbb+relxilllpCp.xcm  #change the localtion of data into global location not e.g. ../../analysis
-################save real residual spectrum
-linewidth=(0 100 500 1000 1500 2000 5000)
-num_points=2000
-for a in 0 1 4 5 6
+xspec_startup_xcm=${PWD}/zdiskbb+relxilllpCp.xcm  #change the location of data into a global location not e.g. ../../analysis
+################create simulated spectra based on various model parameters
+linewidth=(0 500 1500 4500 10000) ###line width of Gaussian
+num_points=2000     #### number of line energy grids
+for a in 0 1 2 3 4 
 do
 echo "linewidth: ${linewidth[$a]} and number of points: ${num_points}"
 routine_sim=${DIR_home}/simulated_lw${linewidth[$a]}_model_${num_points}.xcm
 
-logmin=$(echo "l(${min_energy})/l(10)" | bc -l)
-logmax=$(echo "l(${max_energy})/l(10)" | bc -l)
-logestep=$(echo "(l(${max_energy})/l(10)-l(${min_energy})/l(10))/(${num_points}-1)" | bc -l)
+logmin=$(echo "l(${Emin})/l(10)" | bc -l)
+logmax=$(echo "l(${Emax})/l(10)" | bc -l)
+logestep=$(echo "(l(${Emax})/l(10)-l(${Emin})/l(10))/(${num_points}-1)" | bc -l)
 echo ${logestep} ${logmin} ${logmax}
 echo "start to make the routine file to generate model"
 echo "@${xspec_startup_xcm}" > ${routine_sim}
