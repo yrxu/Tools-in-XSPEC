@@ -10,14 +10,14 @@ MC_spectrum=${DIR_home}/MC_spectrum
 model_dir=${DIR_home}/model
 res_spectrum=${DIR_home}/res
 
-num_simulations=10000
+num_simulations=10000  ###number of simulated residual spectra
 max_item=`echo "${number}-1" | bc`
 
 Emin=0.4  ### RGS energy band: 0.4-1.77 keV
 Emax=1.77
 
 xspec_startup_xcm=${PWD}/zdiskbb+relxilllpCp.xcm  #change the location of data into global location not e.g. ../../analysis
-################cross-correlate residual and model spectrum
+################cross-correlate residual and model spectra
 linewidth=(0 100 500 1000 1500 2000 5000)
 for a in 0 1 2 3 4 5 6
 do
@@ -27,28 +27,31 @@ python3<<EOF
 import numpy as np
 import pandas as pd
 dtype=[('x','float'),('errx','float'),('y','float'),('erry','float')]
+
+###read real residual spectrum
 infile='${DIR_home}/real_res_rgs.qdp'
 data = np.loadtxt(infile,skiprows=3,dtype=dtype)
 x=data['x'];errx=data['errx'];y=data['y'];erry=data['erry']
 x=x[:-1];errx=errx[:-1];y=y[:-1];erry=erry[:-1]
 
-
+###read model spectra and cross-correlate with the real residual spectrum
 inmodel='${DIR_home}/merge_model_lw'+str(${linewidth[$a]})+'.txt'
 df=pd.read_csv(inmodel,header=None,delimiter=' ')
-num_model=len(df.columns)-1
+num_model=len(df.columns)-1   ###number of simulated model spectra, i.e. number of line energy grids
 correlate=[]
 for i in range(num_model):
-	y_model=np.array(df[i+1])
+	y_model=np.array(df[i+1]) ###avoid the energy column
 	cor=np.correlate(y,y_model)
 	correlate.append(cor)
 en=np.logspace(np.log10(${Emin}),np.log10(${Emax}),num=num_model)
 np.savetxt('${DIR_home}/'+'raw_correlate_real_lw'+str(${linewidth[$a]})+'.txt',np.column_stack([en,np.array(correlate)]))
 
+###read simulated residual spectra and cross-correlate with model spectra
 sim_res_file='${DIR_home}/merge_res_'+str(${num_simulations})+'.txt'
 df_sim=pd.read_csv(sim_res_file,header=None,delimiter=' ')
 correlate_stack=[]
 for i in range(${num_simulations}):
-	y_sim=np.array(df_sim[i+1])
+	y_sim=np.array(df_sim[i+1]) 
 	correlate_sim=[]
 	for j in range(num_model):
 		y_model=np.array(df[j+1])
@@ -60,6 +63,9 @@ for i in range(${num_simulations}):
 	correlate_stack.append(correlate_sim)
 np.savetxt('${DIR_home}/'+'raw_correlate_sim_lw'+str(${linewidth[$a]})+'.txt',np.array(correlate_stack).T)
 
+
+###########renormalized the real and each simulated cross-correlation results by simulated cross-correlations
+###########The normalization follows Kosec, Peter et al. 2021, renormalizing positive and negative values separately. 
 raw_file='${DIR_home}/'+'raw_correlate_sim_lw'+str(${linewidth[$a]})+'.txt'
 df_raw=pd.read_csv(raw_file,header=None, delimiter=' ')
 N_corr=[]
