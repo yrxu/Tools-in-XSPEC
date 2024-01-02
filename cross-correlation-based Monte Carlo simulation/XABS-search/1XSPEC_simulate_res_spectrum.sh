@@ -7,8 +7,8 @@ mkdir ${DIR_home}/MC_spectrum
 mkdir ${DIR_home}/res
 MC_spectrum=${DIR_home}/MC_spectrum
 res_spectrum=${DIR_home}/res
-Emin=(0.4 1.77) #keV
-Emax=(1.77 8.0) #keV RGS energy band: 0.4-1.77 keV; EPIC-pn energy band: 1.77-8.0 keV
+Emin=0.4 #keV
+Emax=1.77 #keV RGS energy band: 0.4-1.77 keV
 
 
 number=10000     ##number of simulated spectra
@@ -23,7 +23,7 @@ echo "@${xspec_startup_xcm}"                                                    
 echo "query yes"                                                                  >> ${routine_sim}
 echo "parallel leven ${N_cpu}"                                                    >> ${routine_sim}
 echo "abun lpgs"                                                                  >> ${routine_sim}
-echo "data 2:2 none"                                                              >> ${routine_sim} ###currently, just consider one spectrum
+echo "data 2:2 none"                                                              >> ${routine_sim}  ###currently, just consider one spectrum
 echo "fit"                                                                        >> ${routine_sim}  ###remove the broadband anchoring of removed spectra, ideally parameters constrained by removed spectra should be fixed
 echo "cpd /null"                                                                  >> ${routine_sim}
 echo "setplot delete all"                                                         >> ${routine_sim}
@@ -43,17 +43,15 @@ do
 echo "@${xspec_startup_xcm}"                                                      >> ${routine_sim}
 echo "query yes"                                                                  >> ${routine_sim}
 echo "abun lpgs"                                                                  >> ${routine_sim}
-#echo "data 2:2 none"                                                             >> ${routine_sim}
+echo "data 2:2 none"                                                              >> ${routine_sim}
 echo "# spectrum ${n}"                                                            >> ${routine_sim}
 echo "fakeit"                                                                     >> ${routine_sim}
 echo "y"                                                                          >> ${routine_sim}
 echo "${n}_"                                                                      >> ${routine_sim}
 echo "simulated_${n}_rgs.fak"                                                     >> ${routine_sim}
 echo " "                                                                          >> ${routine_sim}
-echo "simulated_${n}_epicpn.fak"                                                  >> ${routine_sim}
-echo " "                                                                          >> ${routine_sim}
 echo "ignore 1:**-${Emin[0]} ${Emax[0]}-** 2:**-${Emin[1]} ${Emax[1]}-**"         >> ${routine_sim}
-#echo "fit"                                                                       >> ${routine_sim}
+#echo "fit"                                                                       >> ${routine_sim} ###given my experiences, this step is not necessary, but ideally it should be executed. 
 echo "cpd /null"                                                                  >> ${routine_sim}
 echo "setp e"                                                                     >> ${routine_sim}
 echo "setp area"                                                                  >> ${routine_sim}
@@ -64,9 +62,7 @@ echo "plot "                                                                    
 echo "setplot delete all"                                                         >> ${routine_sim}
 echo "mv ${n}_res.qdp ${res_spectrum} "                                           >> ${routine_sim}
 echo "mv simulated_${n}_rgs.fak ${MC_spectrum} "                                  >> ${routine_sim}
-echo "mv simulated_${n}_epicpn.fak ${MC_spectrum} "                               >> ${routine_sim}
 echo "mv simulated_${n}_rgs_bkg.fak ${MC_spectrum} "                              >> ${routine_sim}
-echo "mv simulated_${n}_epicpn_bkg.fak ${MC_spectrum} "                           >> ${routine_sim}
 echo " "
 echo "# simulate and save spectrum ${n}"
 done
@@ -81,25 +77,15 @@ echo "merge residual spectra into one file"
 python3<<EOF
 import numpy as np
 import pandas as pd
-def where_is_str(array, string="NO"):
-	index=np.where(array==string)
-	seen = set()
-	dupes = [x for x in index[0] if x in seen or seen.add(x)]    
-	return dupes
 ystack=[]
 for i in range(${number}):
 	infile='${res_spectrum}/'+str(i)+'_res.qdp'
-	data = np.loadtxt(infile,skiprows=3,dtype=str)
-	index=where_is_str(data)
-	data=np.delete(data,index,0)
-	index=where_is_str(data,string="0")
-	data=np.delete(data,index,0)
-	data = data.astype(np.float64)
-	x=data[:,0];errx=data[:,1];y=data[:,2];erry=data[:,3]
-	#x=x[:-1];errx=errx[:-1];y=y[:-1];erry=erry[:-1]
+	data = pd.read_csv(infile,header=None, skiprows=3,delimiter=' ')
+	x=data[0];errx=data[1];y=data[2];erry=data[3]
+ 	y=y/erry**2
 	if i==0:
 		ystack.append(x)
-	ystack.append(np.nan_to_num(y/erry**2))
+	ystack.append(y)
 np.savetxt('${DIR_home}/'+'merge_res_'+str(${number})+'.txt', np.array(ystack).T, fmt='%.9f')
 EOF
 
