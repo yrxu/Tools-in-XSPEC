@@ -24,6 +24,7 @@ echo "query yes"                                                  >> ${routine_s
 echo "abun wilm"                                                  >> ${routine_sim}
 echo "parallel leven ${N_cpu}"                                    >> ${routine_sim}
 echo "data 2:2 none"                                              >> ${routine_sim}  ###currently, just consider one spectrum
+echo "fit"                                                        >> ${routine_sim}  ###remove the broadband anchoring of removed spectra, ideally parameters constrained by removed spectra should be fixed
 echo "cpd /null"                                                  >> ${routine_sim}
 echo "setplot delete all"                                         >> ${routine_sim}
 echo "setp area"                                                  >> ${routine_sim}
@@ -50,7 +51,7 @@ echo "${n}_"                                                      >> ${routine_s
 echo "simulated_${n}_rgs.fak"                                     >> ${routine_sim}
 echo " "                                                          >> ${routine_sim}
 echo "ignore 1:**-${Emin} ${Emax}-**"                             >> ${routine_sim}
-echo "fit"                                                        >> ${routine_sim}
+#echo "fit"                                                       >> ${routine_sim} ###given my experiences, this step is not necessary, but ideally it should be executed. 
 echo "cpd /null"                                                  >> ${routine_sim}
 echo "setp area"                                                  >> ${routine_sim}
 echo "setp e"                                                     >> ${routine_sim}
