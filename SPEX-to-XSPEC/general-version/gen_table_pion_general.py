@@ -64,7 +64,7 @@ prihd.extend([('MODLNAME','PIONTABLE'),('MODLUNIT','PHOTONS/CM2/S'),\
                   ('REDSHIFT',True),('ADDMODEL',True),('HDUCLASS','OGIP'),\
                   ('HDUCLAS1','XSPEC TABLE MODEL'),('HDUVERS','1.0.0'),\
                   ('CREATOR','YERONG XU'),\
-                  ('ORIGINAL AUTHOR','M L PARKER'),\
+                  ('AUTHOR','M L PARKER'),\
                   ('COMMENT','BASED ON PION MODEL IN SPEX')])
 
 
