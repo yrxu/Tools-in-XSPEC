@@ -16,7 +16,7 @@ min_energy=0.4
 max_energy=1.77
 
 xspec_startup_xcm=${PWD}/nthcomp+relxillCp.xcm  #change the localtion of data into global location not e.g. ../../analysis
-################save real residual spectrum
+################calculate p-values and significance
 linewidth=(0 500 1500 4500 10000)
 for a in 0 1 2 3 4 
 do
@@ -38,17 +38,17 @@ p_value=[]
 norm_list=[]
 for i in range(num_models):
 	print('calculate the '+str(i)+'th model point')
-	if df.iloc[i][1]>0:
+	if df.iloc[i][1]>=0:   ###positive cross-correlation
 		temp=df_sim.iloc[i][1:]
-		temp=temp[temp>=df.iloc[i][1]]
+		temp=temp[temp>=df.iloc[i][1]]  ###count the number of the cross-correlation of simulated spectra larger than that of the real spectrum within the i-th parameter bin 
 		pvalue=len(temp)/num_simulations
 		norm_list.append(1)
-	else:
+	else:                  ###negative cross-correlation
 		temp=df_sim.iloc[i][1:]
-		temp=temp[temp<=df.iloc[i][1]]
+		temp=temp[temp<=df.iloc[i][1]]  ###count the number of the cross-correlation of simulated spectra larger than that of the real spectrum within the i-th parameter bin 
 		pvalue=len(temp)/num_simulations
 		norm_list.append(-1)
-		#pvalue=np.sum([1 if c<df.iloc[i][1] else 0 for c in df_sim.iloc[i][1:]])/num_simulations
+		
 	p_value.append(pvalue)
 
 def find_nearest(array, value):
@@ -56,7 +56,7 @@ def find_nearest(array, value):
 	idx = (np.abs(array - value)).argmin()
 	return idx
 confidence_level=[1 - i for i in p_value]
-arr=np.linspace(0,3.99,num=100000)
+arr=np.linspace(0,3.89,num=100000)
 k=[special.erf(i/np.sqrt(2)) for i in arr]
 significance=[j*arr[find_nearest(k,i)] for i,j in zip(confidence_level,norm_list)]
 #np.savetxt('${DIR_home}/'+'single_trial_pvalue_lw'+str(${linewidth[$a]})+'.txt',np.column_stack([np.array(df[0]),np.array(p_value)]))
