@@ -24,6 +24,12 @@ Use photoionization absorption/emission model to search outflow solutions over m
 Cite Xu, Yerong et al. 2023 when you use them.
 
 
+Perform cross-correlation-based Monte Carlo simulations to estimate line significance (including look-elsewhere effects) in spectra:
+
+- see /cross-correlation-based Monte Carlo simulations/line-search/ directory and follow use scripts in the order
+
+Cite Xu, Yerong et al. 2022 when you use them.
+
 
 Convert results of 'error' command in XSPEC for multiple spectra of the same source into a table in LATEX language:
 
