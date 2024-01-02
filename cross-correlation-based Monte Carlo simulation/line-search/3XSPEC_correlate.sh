@@ -38,6 +38,7 @@ def func(params):
 infile='${DIR_home}/real_res_rgs.qdp'
 data = pd.read_csv(infile,header=None,skiprows=3, delimiter=' ')
 x=data[0];errx=data[1];y=data[2];erry=data[3]
+y=y/erry**2
 
 ###read model spectra and cross-correlate with the real residual spectrum
 inmodel='${DIR_home}/merge_model_lw'+str(${linewidth[$a]})+'.txt'
