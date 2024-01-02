@@ -10,12 +10,13 @@ NH_dir=${DIR_home}/NH_grids
 MC_spectrum=${DIR_home}/MC_spectrum
 res_spectrum=${DIR_home}/res
 
+### pre-calculate the column density at each logxi grid using the uncertainty
 
+### set scanned logxi grid
 xi_min=0.0
 xi_max=5.0
 xi_step=0.1
-linewidth=(500 1500 100)
-#linewidth=(2235 100 )
+linewidth=( 0 500 1500 4500 10000)
 #vstep_list=(500 700 1500)
 #number=10000
 #max_item=`echo "${number}-1" | bc`
