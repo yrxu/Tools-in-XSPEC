@@ -21,7 +21,7 @@ xspec_startup_xcm=${PWD}/nthcomp+relxillCp.xcm  #change the location of data int
 linewidth=(0 500 1500 4500 10000)
 for a in 0 1 2 3 4
 do
-echo "linewidth: ${linewidth[$a]} and number of points: ${num_points}"
+echo "linewidth: ${linewidth[$a]} km/s"
 
 python3<<EOF
 import numpy as np
