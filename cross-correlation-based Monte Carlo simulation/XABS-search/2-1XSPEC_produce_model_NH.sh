@@ -12,6 +12,8 @@ res_spectrum=${DIR_home}/res
 inst=(rgs epicpn)
 Emin=(0.4 1.77) #keV
 Emax=(1.77 10.0) #keV   RGS energy band: 0.4-1.77 keV; EPIC-pn energy band: 1.77-10.0 keV
+logxi_best=1.42  # the best-fit logxi from spectral fitting, to gauge the normalization of the fitted NH vs. logxi relation 
+NH_best=1.5E-04  # the best-fit  NH   from spectral fitting, to gauge the normalization of the fitted NH vs. logxi relation 
 
 ### Pre-calculate the column density at each logxi grid using the uncertainty estimation
 
@@ -93,7 +95,7 @@ do
 	if [ ! -f "${input_file}" ]
 	then
 		echo "File ${input_file} does not exists"
-	else      #     5
+	else      
 		NH=`grep '#     ${index_NH}' ${input_file} | awk '{print $4}'`
 		echo ${xi} ${NH}  >> ${outputfile}
 	fi
@@ -107,8 +109,8 @@ def para(x, m,b, c):
 def obtain_factor(x_best,y_best,m,b,c):
 	return y_best/10**para(x_best,m,b,c)
 dtype=[('x','float'),('y','float')]
-x_best=1.42 ###linewidth=2235 km/s
-y_best=1.5E-04
+x_best=${logxi_best}
+y_best=${NH_best}
 linewidth_best='100'
 infile='${NH_dir}/NH_lw'+linewidth_best+'.txt'
 data = np.loadtxt(infile,dtype=dtype)
