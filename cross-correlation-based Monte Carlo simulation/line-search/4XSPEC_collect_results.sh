@@ -1,5 +1,5 @@
 #!/bin/bash
-export OMP_NUM_THREADS=4
+
 mkdir ${PWD}/simulation
 DIR_home=${PWD}/simulation
 mkdir ${DIR_home}/MC_spectrum
@@ -9,16 +9,16 @@ MC_spectrum=${DIR_home}/MC_spectrum
 model_dir=${DIR_home}/model
 res_spectrum=${DIR_home}/res
 
-num_simulations=10
+num_simulations=10000
 max_item=`echo "${number}-1" | bc`
 
 min_energy=0.4
 max_energy=1.77
 
-xspec_startup_xcm=${PWD}/zdiskbb+relxilllpCp.xcm  #change the localtion of data into global location not e.g. ../../analysis
+xspec_startup_xcm=${PWD}/nthcomp+relxillCp.xcm  #change the localtion of data into global location not e.g. ../../analysis
 ################save real residual spectrum
-linewidth=(0 100 500 1000 1500 2000 5000)
-for a in 0 1 2 3 4 5 6 
+linewidth=(0 500 1500 4500 10000)
+for a in 0 1 2 3 4 
 do
 echo "linewidth: ${linewidth[$a]} and number of points: ${num_points}"
 
