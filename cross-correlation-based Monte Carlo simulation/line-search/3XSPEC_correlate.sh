@@ -1,5 +1,5 @@
 #!/bin/bash
-number_of_cores=4 # Define parallelization parameters
+N_cpu=4 # Define parallelization parameters
 
 mkdir ${PWD}/simulation
 DIR_home=${PWD}/simulation
@@ -10,7 +10,7 @@ MC_spectrum=${DIR_home}/MC_spectrum
 model_dir=${DIR_home}/model
 res_spectrum=${DIR_home}/res
 
-num_simulations=10000  ###number of simulated residual spectra
+num_simulations=10  ###number of simulated residual spectra
 max_item=`echo "${number}-1" | bc`
 
 Emin=0.4  ### RGS energy band: 0.4-1.77 keV
@@ -19,13 +19,20 @@ Emax=1.77
 xspec_startup_xcm=${PWD}/nthcomp+relxillCp.xcm  #change the location of data into global location not e.g. ../../analysis
 ################cross-correlate residual and model spectra
 linewidth=(0 500 1500 4500 10000)
-for a in 0 1 2 3 4
+for a in 0  
 do
 echo "linewidth: ${linewidth[$a]} and number of points: ${num_points}"
 
 python3<<EOF
 import numpy as np
 import pandas as pd
+import multiprocessing as mp
+import time
+import itertools
+def func(params):
+        a=params[0]
+        b=params[1]
+        return np.correlate(a,b)
 
 ###read real residual spectrum
 infile='${DIR_home}/real_res_rgs.qdp'
@@ -48,18 +55,29 @@ np.savetxt('${DIR_home}/'+'raw_correlate_real_lw'+str(${linewidth[$a]})+'.txt',n
 ###read simulated residual spectra and cross-correlate with model spectra
 sim_res_file='${DIR_home}/merge_res_'+str(${num_simulations})+'.txt'
 df_sim=pd.read_csv(sim_res_file,header=None,delimiter=' ')
-correlate_stack=[]
-for i in range(${num_simulations}):
-	y_sim=np.array(df_sim[i+1]) 
-	correlate_sim=[]
-	for j in range(num_model):
-		y_model=np.array(df[j+1])
-		cor_sim=np.correlate(y_sim,y_model)
-		correlate_sim.extend(cor_sim)
-		print('calculate the '+str(j)+'th model point of the '+str(i)+'th simulation')
-	if i==0:
-		correlate_stack.append(en)
-	correlate_stack.append(correlate_sim)
+paramlist=list(itertools.product(np.array(df_sim.iloc[:,1:]).T,np.array(df.iloc[:,1:]).T))
+
+print('start to parallel')
+star=time.time()
+pool=mp.Pool(${N_cpu})
+correlate_sim=pool.map(func,paramlist)
+end=time.time()
+print('{:.4f} s'.format(end-star))
+print(np.array(correlate_sim).reshape($num_simulations,num_model).shape)
+correlate_stack=np.array(correlate_sim).reshape($num_simulations,num_model)
+
+#correlate_stack=[]
+#for i in range(${num_simulations}):
+#	y_sim=np.array(df_sim[i+1]) 
+#	correlate_sim=[]
+#	for j in range(num_model):
+#		y_model=np.array(df[j+1])
+#		cor_sim=np.correlate(y_sim,y_model)
+#		correlate_sim.extend(cor_sim)
+#		print('calculate the '+str(j)+'th model point of the '+str(i)+'th simulation')
+#	if i==0:
+#		correlate_stack.append(en)
+#	correlate_stack.append(correlate_sim)
 np.savetxt('${DIR_home}/'+'raw_correlate_sim_lw'+str(${linewidth[$a]})+'.txt',np.array(correlate_stack).T, fmt='%.9f')
 
 ###########renormalized the real and each simulated cross-correlation results by simulated cross-correlations
