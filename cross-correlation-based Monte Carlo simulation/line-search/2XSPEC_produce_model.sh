@@ -13,8 +13,8 @@ Emax=1.77 #keV RGS energy band: 0.4-1.77 keV
 xspec_startup_xcm=${PWD}/nthcomp+relxillCp.xcm  #change the location of data into a global location not e.g. ../../analysis
 ################create simulated spectra based on various model parameters
 linewidth=(0 500 1500 4500 10000) ###line width of Gaussian
-num_points=10     #### number of line energy grids
-for a in 0  
+num_points=10000     #### number of line energy grids
+for a in 0 1 2 3 4   
 do
 echo "linewidth: ${linewidth[$a]} and number of points: ${num_points}"
 routine_sim=${DIR_home}/simulated_lw${linewidth[$a]}_model_${num_points}.xcm
@@ -28,7 +28,7 @@ echo "@${xspec_startup_xcm}"                                        > ${routine_
 echo "query yes"                                                   >> ${routine_sim}
 echo "abun wilm"                                                   >> ${routine_sim}
 echo "data 2:2 none"                                               >> ${routine_sim}
-echo "model gaus"                                                  >> ${routine_sim} ### if you want to obtain the rest-frame results, use zgaussian and set the redshift
+echo "model gaus"                                                  >> ${routine_sim} ### if you want to obtain the rest-frame results, use zgauss and set the redshift
 echo "/*"                                                          >> ${routine_sim}
 
 
@@ -60,9 +60,9 @@ done
 
 echo "exit"                                                        >> ${routine_sim}
 
-#xspec<<EOF
-#@${routine_sim}
-#EOF
+xspec<<EOF
+@${routine_sim}
+EOF
 
 echo "merge model spectra into one file"
 
