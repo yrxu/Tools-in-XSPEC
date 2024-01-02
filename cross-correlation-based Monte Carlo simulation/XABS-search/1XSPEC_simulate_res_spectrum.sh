@@ -23,7 +23,8 @@ echo "@${xspec_startup_xcm}"                                                    
 echo "query yes"                                                                  >> ${routine_sim}
 echo "parallel leven ${N_cpu}"                                                    >> ${routine_sim}
 echo "abun lpgs"                                                                  >> ${routine_sim}
-#echo "data 2:2 none"                                                             >> ${routine_sim} ###currently, just consider one spectrum
+echo "data 2:2 none"                                                              >> ${routine_sim} ###currently, just consider one spectrum
+echo "fit"                                                                        >> ${routine_sim}  ###remove the broadband anchoring of removed spectra, ideally parameters constrained by removed spectra should be fixed
 echo "cpd /null"                                                                  >> ${routine_sim}
 echo "setplot delete all"                                                         >> ${routine_sim}
 echo "setp area"                                                                  >> ${routine_sim}
@@ -52,7 +53,7 @@ echo " "                                                                        
 echo "simulated_${n}_epicpn.fak"                                                  >> ${routine_sim}
 echo " "                                                                          >> ${routine_sim}
 echo "ignore 1:**-${Emin[0]} ${Emax[0]}-** 2:**-${Emin[1]} ${Emax[1]}-**"         >> ${routine_sim}
-echo "fit"                                                                        >> ${routine_sim}
+#echo "fit"                                                                       >> ${routine_sim}
 echo "cpd /null"                                                                  >> ${routine_sim}
 echo "setp e"                                                                     >> ${routine_sim}
 echo "setp area"                                                                  >> ${routine_sim}
