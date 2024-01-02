@@ -66,7 +66,7 @@ end=time.time()
 print('parallelization time: {:.4f} s'.format(end-star))
 correlate_stack=np.array(correlate_sim).reshape($num_simulations,num_model)
 
-np.savetxt('${DIR_home}/'+'raw_correlate_sim_lw'+str(${linewidth[$a]})+'.txt',np.array(correlate_stack).T, fmt='%.9f')
+np.savetxt('${DIR_home}/'+'raw_correlate_sim_lw'+str(${linewidth[$a]})+'.txt',np.column_stack([en,np.array(correlate_stack).T]), fmt='%.9f')
 
 ###########renormalized the real and each simulated cross-correlation results by simulated cross-correlations
 ###########The normalization follows Kosec, Peter et al. 2021, renormalizing positive and negative values separately. 
