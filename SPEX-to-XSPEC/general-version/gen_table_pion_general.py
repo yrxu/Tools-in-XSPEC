@@ -3,7 +3,7 @@
 
 import numpy as np
 from matplotlib import pyplot as pl
-import pyfits as pf
+import astropy.io.fits as pf
 
 grid_dir='emission_grid' ##the directory containing generated spectra by PION
 
