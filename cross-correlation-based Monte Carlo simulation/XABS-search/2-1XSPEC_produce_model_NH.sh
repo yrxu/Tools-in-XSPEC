@@ -18,6 +18,13 @@ xi_max=5.0
 xi_step=0.1
 linewidth=( 500 1500 4500 10000)
 xspec_startup_xcm=${PWD}/nthcomp+relxillCp.xcm  #change the location of data into a global location not e.g. ../../analysis
+model_plus_plamsa="constant*tbabs*zashift*mtable{xabs_xs.fits}*(nthComp+relxillCp)" #the model included an XABS model in XSPEC
+
+#index_energy=24 #the index of the line energy in Gaussian model in XSPEC, then N_energy+1= index of line width, N_energy+2= index of normalization
+#index_width=$(($index_energy+1))
+#index_norm=$(($index_energy+2))
+N_gauss=6 #the order of Gaussian in XSPEC model combination, here is the 6th component 
+
 ################create the routine to run error command on NH of the plasma
 
 routine_sim=${DIR_home}/simulated_spectrum_for_NH.xcm
