@@ -1,4 +1,5 @@
 #!/bin/bash
+N_cpu=4 # Define parallelization parameters
 
 mkdir ${PWD}/simulation
 DIR_home=${PWD}/simulation
@@ -21,6 +22,7 @@ echo "start to make the routine file for simulation"
 echo "@${xspec_startup_xcm}"                                       > ${routine_sim}
 echo "query yes"                                                  >> ${routine_sim}
 echo "abun wilm"                                                  >> ${routine_sim}
+echo "parallel leven ${N_cpu}"                                    >> ${routine_sim}
 echo "data 2:2 none"                                              >> ${routine_sim}  ###currently, just consider one spectrum
 echo "cpd /null"                                                  >> ${routine_sim}
 echo "setplot delete all"                                         >> ${routine_sim}
