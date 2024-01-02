@@ -10,11 +10,11 @@ model_dir=${DIR_home}/model
 Emin=0.4 #keV
 Emax=1.77 #keV RGS energy band: 0.4-1.77 keV
 
-xspec_startup_xcm=${PWD}/zdiskbb+relxilllpCp.xcm  #change the location of data into a global location not e.g. ../../analysis
+xspec_startup_xcm=${PWD}/nthcomp+relxillCp.xcm  #change the location of data into a global location not e.g. ../../analysis
 ################create simulated spectra based on various model parameters
 linewidth=(0 500 1500 4500 10000) ###line width of Gaussian
-num_points=2000     #### number of line energy grids
-for a in 0 1 2 3 4 
+num_points=10     #### number of line energy grids
+for a in 0  
 do
 echo "linewidth: ${linewidth[$a]} and number of points: ${num_points}"
 routine_sim=${DIR_home}/simulated_lw${linewidth[$a]}_model_${num_points}.xcm
@@ -36,7 +36,7 @@ echo "/*"                                                          >> ${routine_
 echo "start to generate loop" 
 for y in $(seq 0 1 $((${num_points}-1)))
 do 
-	energy=$(echo "scale=8; e((${Emin}+$y*$logestep)*l(10))"| bc -l )
+	energy=$(echo "scale=8; e((${logmin}+$y*$logestep)*l(10))"| bc -l )
 	lw=$(echo "scale=8; ${energy}*${linewidth[$a]}/300000"| bc -l )
 	echo "Energy: ${energy} keV; linewidth: ${lw} keV"
 	echo "#Energy: ${energy} keV; linewidth: ${lw} keV"        >> ${routine_sim}
@@ -60,25 +60,26 @@ done
 
 echo "exit"                                                        >> ${routine_sim}
 
-xspec<<EOF
-@${routine_sim}
-EOF
+#xspec<<EOF
+#@${routine_sim}
+#EOF
 
 echo "merge model spectra into one file"
 
 python3<<EOF
 import pandas as pd
 import numpy as np
+import numpy as np
 ystack=[]
 number=${num_points}
 for i in range(number):
 	infile='${model_dir}/'+str(i)+'_model_rgs.qdp'
 	data = pd.read_csv(infile,skiprows=3,header=None,delimiter=' ')
-	x=np.array(data[0][:-1]);y=np.array(data[4][:-1])
+	x=np.array(data[0][:]);y=np.array(data[4][:])
 	if i==0:
 		ystack.append(x)
 	ystack.append(y)
-np.savetxt('${DIR_home}/'+'merge_model_lw'+str(${linewidth[$a]})+'.txt', np.array(ystack).T)  
+np.savetxt('${DIR_home}/'+'merge_model_lw'+str(${linewidth[$a]})+'.txt', np.array(ystack).T, fmt='%.9f')  
 EOF
 
 done

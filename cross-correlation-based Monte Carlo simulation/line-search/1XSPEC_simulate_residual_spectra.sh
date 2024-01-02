@@ -9,10 +9,10 @@ res_spectrum=${DIR_home}/res
 Emin=0.4 #keV
 Emax=1.77 #keV RGS energy band: 0.4-1.77 keV
 
-number=10000                ##number of simulated spectra
+number=10                ##number of simulated spectra
 max_item=`echo "${number}-1" | bc`
 
-xspec_startup_xcm=${PWD}/zdiskbb+relxilllpCp.xcm  #startup .xcm file, caution!!! change the location of data into global location not e.g. ../../analysis
+xspec_startup_xcm=${PWD}/nthcomp+relxillCp.xcm  #startup .xcm file, caution!!! change the location of data into global location not e.g. ../../analysis
 
 #########create the .xcm file to simulate spectra
 #########save real residual spectrum
@@ -66,26 +66,29 @@ done
 
 echo "exit"                                                       >> ${routine_sim}
 
-xspec<<EOF
-@${routine_sim}
-EOF
+#xspec<<EOF
+#@${routine_sim}
+#EOF
 
 echo "merge residual spectra into one file"
 
 python3<<EOF
 import numpy as np
-
+import pandas as pd
 dtype=[('x','float'),('errx','float'),('y','float'),('erry','float')]
+#dtype=[('x','str'),('errx','str'),('y','str'),('erry','str')]
 ystack=[]
 for i in range(${number}):
 	infile='${res_spectrum}/'+str(i)+'_res_rgs.qdp'
-	data = np.loadtxt(infile,skiprows=3,dtype=dtype)
-	x=data['x'];errx=data['errx'];y=data['y'];erry=data['erry']
-	x=x[:-1];errx=errx[:-1];y=y[:-1];erry=erry[:-1]
+	#data = np.loadtxt(infile,skiprows=3,dtype=dtype)
+	data = pd.read_csv(infile,header=None, skiprows=3,delimiter=' ')
+	x=data[0];errx=data[1];y=data[2];erry=data[3]
+	#x=np.array(data['x']);errx=np.array(data['errx']);y=np.array(data['y']);erry=np.array(data['erry'])
+	#x=x[:-1];errx=errx[:-1];y=y[:-1];erry=erry[:-1]
 	if i==0:
 		ystack.append(x)
 	ystack.append(y)
-np.savetxt('${DIR_home}/'+'merge_res_'+str(${number})+'.txt', np.array(ystack).T)  
+np.savetxt('${DIR_home}/'+'merge_res_'+str(${number})+'.txt', np.array(ystack).T, fmt='%.9f')  
 EOF
 
 echo "done"
