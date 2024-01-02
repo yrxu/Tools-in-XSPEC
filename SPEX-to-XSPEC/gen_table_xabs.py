@@ -63,7 +63,7 @@ prihd.extend([('MODLNAME','XABSTABLE'),('MODLUNIT','PHOTONS/CM2/S'),\
                   ('REDSHIFT',True),('ADDMODEL',False),('HDUCLASS','OGIP'),\
                   ('HDUCLAS1','XSPEC TABLE MODEL'),('HDUVERS','1.0.0'),\
                   ('CREATOR','YERONG XU'),\
-                  ('ORIGINAL AUTHOR','M L PARKER'),\
+                  ('AUTHOR','M L PARKER'),\
                   ('COMMENT','BASED ON XABS MODEL IN SPEX')])
 
 
