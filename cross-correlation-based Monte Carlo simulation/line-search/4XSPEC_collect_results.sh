@@ -9,7 +9,7 @@ MC_spectrum=${DIR_home}/MC_spectrum
 model_dir=${DIR_home}/model
 res_spectrum=${DIR_home}/res
 
-num_simulations=10
+num_simulations=10000
 max_item=`echo "${number}-1" | bc`
 
 min_energy=0.4
@@ -18,7 +18,7 @@ max_energy=1.77
 xspec_startup_xcm=${PWD}/nthcomp+relxillCp.xcm  #change the localtion of data into global location not e.g. ../../analysis
 ################calculate p-values and significance without considering look-elsewhere effect
 linewidth=(0 500 1500 4500 10000)
-for a in 0  
+for a in 0 1 2 3 4
 do
 echo "linewidth: ${linewidth[$a]} and number of points: ${num_points}"
 
@@ -69,7 +69,7 @@ for i in range(num_simulations):
 	min_cor=min(np.array(df_sim[i+1]))
 	max_list.append(max_cor)
 	min_list.append(min_cor)
-
+####calculate p-values
 for i in range(num_models):
 	print('calculate the real significance of the '+str(i)+'th model point')
 	if df.iloc[i][1]>0:
