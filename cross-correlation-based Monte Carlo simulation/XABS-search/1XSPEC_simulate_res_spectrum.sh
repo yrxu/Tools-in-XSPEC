@@ -79,6 +79,7 @@ EOF
 echo "merge residual spectra into one file"
 python3<<EOF
 import numpy as np
+import pandas as pd
 def where_is_str(array, string="NO"):
 	index=np.where(array==string)
 	seen = set()
@@ -98,24 +99,7 @@ for i in range(${number}):
 	if i==0:
 		ystack.append(x)
 	ystack.append(np.nan_to_num(y/erry**2))
-	#print(len(np.nan_to_num(y/erry**2)))
-np.savetxt('${DIR_home}/'+'merge_res_'+str(${number})+'.txt', np.array(ystack).T)
-ystack_area=[]
-for i in range(${number}):
-	infile='${res_spectrum}/'+str(i)+'_res_area.qdp'
-	data = np.loadtxt(infile,skiprows=3,dtype=str)
-	index=where_is_str(data)
-	data=np.delete(data,index,0)
-	index=where_is_str(data,string="0")
-	data=np.delete(data,index,0)
-	data = data.astype(np.float64)
-	x=data[:,0];errx=data[:,1];y=data[:,2];erry=data[:,3]
-	#x=x[:-1];errx=errx[:-1];y=y[:-1];erry=erry[:-1]
-	if i==0:
-		ystack_area.append(x)
-	ystack_area.append(np.nan_to_num(y/erry**2))
-	#print(len(np.nan_to_num(y/erry**2)))
-np.savetxt('${DIR_home}/'+'merge_res_'+str(${number})+'_area.txt', np.array(ystack_area).T)
+np.savetxt('${DIR_home}/'+'merge_res_'+str(${number})+'.txt', np.array(ystack).T, fmt='%.9f')
 EOF
 
 echo "done"
