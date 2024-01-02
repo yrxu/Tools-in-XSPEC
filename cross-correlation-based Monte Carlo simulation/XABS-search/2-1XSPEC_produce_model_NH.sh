@@ -1,5 +1,6 @@
 #!/bin/bash
-export OMP_NUM_THREADS=4
+N_cpu=4  # Define parallelization parameters
+
 mkdir ${PWD}/simulation
 DIR_home=${PWD}/simulation
 mkdir ${DIR_home}/MC_spectrum
