@@ -112,7 +112,7 @@ for c in range(0,len(pars[0])):
     parcols.append(pf.Column(name=pcnames[c],format=pcformats[c],array=col))
 
 pcdefs = pf.ColDefs(parcols)
-partb = pf.new_table(pcdefs)
+partb = pf.BinTableHDU.from_columns(pcdefs)
 partb.name='Parameters'
 parhd = partb.header
 parhd.extend([('NINTPARM',Nvars),('NADDPARM',0),('HDUCLASS','OGIP'),\
@@ -129,7 +129,7 @@ ehigh=temp_data[:,0]+temp_data[:,1]
 energ_lo = pf.Column(name='ENERG_LO', format='E', array=elow)
 energ_hi = pf.Column(name='ENERG_HI', format='E', array=ehigh)
 
-energtb = pf.new_table([energ_lo,energ_hi])
+energtb = pf.BinTableHDU.from_columns([energ_lo,energ_hi])
 energtb.name = 'Energies'
 energhd = energtb.header
 energhd.extend([('HDUCLASS','OGIP'),('HDUCLAS1','XSPEC TABLE MODEL'),\
@@ -142,7 +142,7 @@ parcol = pf.Column(name = 'PARAMVAL',format='%sE' %Nvars ,array = parray)
 speccol = pf.Column(name = 'INTPSPEC',format='%sE' % len(spec_array[0]),\
                         unit='photons/cm2/s',array = spec_array)
 
-spectb = pf.new_table([parcol,speccol],tbtype='BinTableHDU')
+spectb = pf.BinTableHDU.from_columns([parcol,speccol])
 spectb.name = 'Spectra'
 spechd = spectb.header
 spechd.extend([('HDUCLASS','OGIP'),('HDUCLAS1','XSPEC TABLE MODEL'),\
