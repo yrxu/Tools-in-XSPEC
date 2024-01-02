@@ -9,24 +9,23 @@ MC_spectrum=${DIR_home}/MC_spectrum
 model_dir=${DIR_home}/model
 res_spectrum=${DIR_home}/res
 
-num_simulations=10000
+num_simulations=10
 max_item=`echo "${number}-1" | bc`
 
 min_energy=0.4
 max_energy=1.77
 
 xspec_startup_xcm=${PWD}/nthcomp+relxillCp.xcm  #change the localtion of data into global location not e.g. ../../analysis
-################calculate p-values and significance
+################calculate p-values and significance without considering look-elsewhere effect
 linewidth=(0 500 1500 4500 10000)
-for a in 0 1 2 3 4 
+for a in 0  
 do
 echo "linewidth: ${linewidth[$a]} and number of points: ${num_points}"
 
 python3<<EOF
 import numpy as np
 import pandas as pd
-import scipy.integrate as integrate
-import scipy.special as special
+import scipy.stats as stats
 infile='${DIR_home}/norm_correlate_real_lw'+str(${linewidth[$a]})+'.txt'
 df=pd.read_csv(infile,header=None,delimiter=' ')
 insimfile='${DIR_home}/norm_correlate_sim_lw'+str(${linewidth[$a]})+'.txt'
@@ -51,26 +50,26 @@ for i in range(num_models):
 		
 	p_value.append(pvalue)
 
-def find_nearest(array, value):
-	array = np.asarray(array)
-	idx = (np.abs(array - value)).argmin()
-	return idx
-confidence_level=[1 - i for i in p_value]
-arr=np.linspace(0,3.89,num=100000)
-k=[special.erf(i/np.sqrt(2)) for i in arr]
-significance=[j*arr[find_nearest(k,i)] for i,j in zip(confidence_level,norm_list)]
-#np.savetxt('${DIR_home}/'+'single_trial_pvalue_lw'+str(${linewidth[$a]})+'.txt',np.column_stack([np.array(df[0]),np.array(p_value)]))
-np.savetxt('${DIR_home}/'+'single_trial_significance_lw'+str(${linewidth[$a]})+'.txt',np.column_stack([np.array(df[0]),np.array(significance)]))
+def pvalue_to_sigma(p):
+	return -stats.norm.ppf(p / 2)  ###divide by 2 for a two-tailed test
 
+max_sigma=pvalue_to_sigma(1/${num_simulations})  ###maximal achievable sigma given the number of simulations
+significance=[pvalue_to_sigma(i)*j if pvalue_to_sigma(i)!=np.infty else max_sigma*j for i,j in zip(p_value,norm_list)]
+np.savetxt('${DIR_home}/'+'single_trial_significance_lw'+str(${linewidth[$a]})+'.txt',np.column_stack([np.array(df[0]),np.array(significance)]), fmt='%.9f')
+
+
+################calculate p-values and significance considering look-elsewhere effect
 max_list=[]
 min_list=[]
 true_p_value=[]
 true_norm_list=[]
+####pick out the largest cross-correlation within simulated spectra, positive and negative
 for i in range(num_simulations):
 	max_cor=max(np.array(df_sim[i+1]))
 	min_cor=min(np.array(df_sim[i+1]))
 	max_list.append(max_cor)
 	min_list.append(min_cor)
+
 for i in range(num_models):
 	print('calculate the real significance of the '+str(i)+'th model point')
 	if df.iloc[i][1]>0:
@@ -79,21 +78,15 @@ for i in range(num_models):
 		temp=temp.dropna()
 		true_pvalue=len(temp)/num_simulations
 		true_norm_list.append(1)
-		#true_pvalue=np.sum([1 if c>df.iloc[i][1] else 0 for c in max_list])/num_simulations
 	else:
 		temp=pd.DataFrame(min_list)
 		temp=temp[temp<=df.iloc[i][1]]
 		temp=temp.dropna()
 		true_pvalue=len(temp)/num_simulations
 		true_norm_list.append(-1)
-		#true_pvalue=np.sum([1 if c<df.iloc[i][1] else 0 for c in min_list])/num_simulations
 	true_p_value.append(true_pvalue)
-true_confidence_level=[1 - i for i in true_p_value]
-true_significance=[j*arr[find_nearest(k,i)] for i,j in zip(true_confidence_level,true_norm_list)]
-#np.savetxt('${DIR_home}/'+'true_pvalue_lw'+str(${linewidth[$a]})+'.txt',np.column_stack([np.array(df[0]),np.array(true_p_value)]))
-np.savetxt('${DIR_home}/'+'true_significance_lw'+str(${linewidth[$a]})+'.txt',np.column_stack([np.array(df[0]),np.array(true_significance)]))
-
-
+true_significance=[pvalue_to_sigma(i)*j if pvalue_to_sigma(i)!=np.infty else max_sigma*j for i,j in zip(true_p_value,true_norm_list)]
+np.savetxt('${DIR_home}/'+'true_significance_lw'+str(${linewidth[$a]})+'.txt',np.column_stack([np.array(df[0]),np.array(true_significance)]), fmt='%.9f')
 
 EOF
 
