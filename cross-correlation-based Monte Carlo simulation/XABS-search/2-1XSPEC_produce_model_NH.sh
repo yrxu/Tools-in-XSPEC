@@ -9,6 +9,9 @@ mkdir ${DIR_home}/res
 NH_dir=${DIR_home}/NH_grids
 MC_spectrum=${DIR_home}/MC_spectrum
 res_spectrum=${DIR_home}/res
+inst=(rgs epicpn)
+Emin=(0.4 1.77) #keV
+Emax=(1.77 10.0) #keV   RGS energy band: 0.4-1.77 keV; EPIC-pn energy band: 1.77-10.0 keV
 
 ### Pre-calculate the column density at each logxi grid using the uncertainty estimation
 
@@ -20,58 +23,59 @@ linewidth=( 500 1500 4500 10000)
 xspec_startup_xcm=${PWD}/nthcomp+relxillCp.xcm  #change the location of data into a global location not e.g. ../../analysis
 model_plus_plamsa="constant*tbabs*zashift*mtable{xabs_xs.fits}*(nthComp+relxillCp)" #the model included an XABS model in XSPEC
 
-#index_energy=24 #the index of the line energy in Gaussian model in XSPEC, then N_energy+1= index of line width, N_energy+2= index of normalization
-#index_width=$(($index_energy+1))
-#index_norm=$(($index_energy+2))
-N_gauss=6 #the order of Gaussian in XSPEC model combination, here is the 6th component 
+index_fc=7   # the index of the covering factor of XABS 
+index_z=8    # the index of the redshift of XABS   
+index_logxi=4 # the index of logxi of XABS 
+index_v=6    # the index of line width of XABS 
+index_NH=5   # the index of NH of XABS 
 
-################create the routine to run error command on NH of the plasma
+################create the routine to simulate spectra and run error command on NH of the plasma
 
 routine_sim=${DIR_home}/simulated_spectrum_for_NH.xcm
 echo "start to make the routine file for simulation"
-echo "@${xspec_startup_xcm}" > ${routine_sim}
-echo "query yes"            >> ${routine_sim}
-echo "abun lpgs"            >> ${routine_sim}
-echo " "                    >> ${routine_sim}
-echo "#generate real residual spectrum routine" >> ${routine_sim}
-echo "fakeit"                  >> ${routine_sim}
-echo "y"                       >> ${routine_sim}
-echo "NH_"                   >> ${routine_sim}
-echo "simulated_NH_rgs.fak"  >> ${routine_sim}
-echo " "                       >> ${routine_sim}
-echo "simulated_NH_epicpn.fak"  >> ${routine_sim}
-echo " "                       >> ${routine_sim}
-echo "ignore 1:**-0.4 1.77-** 2:**-1.77 8.0-**" >> ${routine_sim}
-echo "fit"                       >> ${routine_sim}
-echo "editmod cons*tbabs*zashift*mtable{xabs_xs.fits}*(nthComp+relxillCp)" >> ${routine_sim}
-echo "/*"                       >> ${routine_sim}
-echo "fre 7 8"                       >> ${routine_sim}
-echo "parallel leven 12"                       >> ${routine_sim}
-echo "parallel error 12"                       >> ${routine_sim}
+echo "@${xspec_startup_xcm}"                                                                 > ${routine_sim}
+echo "query yes"                                                                            >> ${routine_sim}
+echo "abun lpgs"                                                                            >> ${routine_sim}
+echo " "                                                                                    >> ${routine_sim}
+echo "#generate real residual spectrum routine"                                             >> ${routine_sim}
+echo "fakeit"                                                                               >> ${routine_sim}
+echo "y"                                                                                    >> ${routine_sim}
+echo "NH_"                                                                                  >> ${routine_sim}
+echo "simulated_NH_${inst[0]}.fak"                                                          >> ${routine_sim}
+echo " "                                                                                    >> ${routine_sim}
+echo "simulated_NH_${inst[1]}.fak"                                                          >> ${routine_sim}
+echo " "                                                                                    >> ${routine_sim}
+echo "ignore 1:**-${Emin[0]} ${Emax[0]}-** 2:**-${Emin[1]} ${Emax[1]}-**"                   >> ${routine_sim}
+echo "fit"                                                                                  >> ${routine_sim}
+echo "editmod ${model_plus_plamsa}"                                                         >> ${routine_sim}
+echo "/*"                                                                                   >> ${routine_sim}
+echo "fre ${index_fc} ${index_z}"                                                           >> ${routine_sim}
+echo "parallel leven ${N_cpu}"                                                              >> ${routine_sim}
+echo "parallel error ${N_cpu}"                                                              >> ${routine_sim}
 
-for a in  2
+for a in  0 1 2 3
 do
 	echo "line width ${linewidth[$a]} km/s"
 	for xi in $(seq ${xi_min} ${xi_step} ${xi_max})
 	do
-	echo "new 4 ${xi} -1"                  >> ${routine_sim}
-	echo "new 6 ${linewidth[$a]} -1"                  >> ${routine_sim}
-	echo "fit"                       >> ${routine_sim}
-	echo "fit"                       >> ${routine_sim}
-	echo "log ${NH_dir}/NH_lw${linewidth[$a]}_logxi${xi}.log"                       >> ${routine_sim}
-	echo "err 5"                       >> ${routine_sim}
-	echo "log none"                       >> ${routine_sim}
-	echo " "                       >> ${routine_sim}
+	echo "new ${index_logxi} ${xi} -1"                                                  >> ${routine_sim}
+	echo "new ${index_v} ${linewidth[$a]} -1"                                           >> ${routine_sim}
+	echo "fit"                                                                          >> ${routine_sim}
+	echo "fit"                                                                          >> ${routine_sim}
+	echo "log ${NH_dir}/NH_lw${linewidth[$a]}_logxi${xi}.log"                           >> ${routine_sim}
+	echo "err ${index_NH}"                                                              >> ${routine_sim}
+	echo "log none"                                                                     >> ${routine_sim}
+	echo " "                                                                            >> ${routine_sim}
 	
 	done
 done
 
-echo "mv simulated_NH_rgs.fak ${NH_dir} "                  >> ${routine_sim}
-echo "mv simulated_NH_epicpn.fak ${NH_dir} "                  >> ${routine_sim}
-echo "mv simulated_NH_rgs_bkg.fak ${NH_dir} "                  >> ${routine_sim}
-echo "mv simulated_NH_epicpn_bkg.fak ${NH_dir} "                  >> ${routine_sim}
+echo "mv simulated_NH_${inst[0]}.fak ${NH_dir} "                                            >> ${routine_sim}
+echo "mv simulated_NH_${inst[1]}.fak ${NH_dir} "                                            >> ${routine_sim}
+echo "mv simulated_NH_${inst[0]}_bkg.fak ${NH_dir} "                                        >> ${routine_sim}
+echo "mv simulated_NH_${inst[1]}_bkg.fak ${NH_dir} "                                        >> ${routine_sim}
 
-echo "exit"                 >> ${routine_sim}
+echo "exit"                                                                                 >> ${routine_sim}
 
 xspec<<EOF
 @${routine_sim}
@@ -79,7 +83,7 @@ EOF
 
 
 echo "merge NH and logxi into one file"
-for a in  2
+for a in 0 1 2 3
 do
 	outputfile=${NH_dir}/NH_lw${linewidth[$a]}.txt
 	rm ${outputfile}
@@ -88,11 +92,10 @@ do
 	input_file=${NH_dir}/NH_lw${linewidth[$a]}_logxi${xi}.log
 	if [ ! -f "${input_file}" ]
 	then
-	#test_command=0 # if file for a certain point does not exist, ignore it or comment next line to track
-	echo "File ${input_file} does not exists"
+		echo "File ${input_file} does not exists"
 	else      #     5
-	NH=`grep '#     5' ${input_file} | awk '{print $4}'`
-	echo ${xi} ${NH}  >> ${outputfile}
+		NH=`grep '#     ${index_NH}' ${input_file} | awk '{print $4}'`
+		echo ${xi} ${NH}  >> ${outputfile}
 	fi
 	done
 done
