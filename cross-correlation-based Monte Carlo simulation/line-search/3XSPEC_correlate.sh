@@ -93,8 +93,8 @@ for i in range(num_model):
 	n_corr_real=[c/norm_pos if c>=0 else c/norm_neg for c in correlate[i]]
 	N_corr_real.append(n_corr_real)
 	print('calculate the normalized significance of the '+str(i)+'th model point')
-np.savetxt('${DIR_home}/'+'norm_correlate_sim_lw'+str(${linewidth[$a]})+'.txt',np.column_stack([en,np.array(N_corr)]))
-np.savetxt('${DIR_home}/'+'norm_correlate_real_lw'+str(${linewidth[$a]})+'.txt',np.column_stack([en,np.array(N_corr_real)]))
+np.savetxt('${DIR_home}/'+'norm_correlate_sim_lw'+str(${linewidth[$a]})+'.txt',np.column_stack([en,np.array(N_corr)]), fmt='%.9f')
+np.savetxt('${DIR_home}/'+'norm_correlate_real_lw'+str(${linewidth[$a]})+'.txt',np.column_stack([en,np.array(N_corr_real)]), fmt='%.9f')
 EOF
 
 done
