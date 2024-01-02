@@ -10,18 +10,15 @@ NH_dir=${DIR_home}/NH_grids
 MC_spectrum=${DIR_home}/MC_spectrum
 res_spectrum=${DIR_home}/res
 
-### pre-calculate the column density at each logxi grid using the uncertainty
+### Pre-calculate the column density at each logxi grid using the uncertainty estimation
 
 ### set scanned logxi grid
 xi_min=0.0
 xi_max=5.0
 xi_step=0.1
 linewidth=( 500 1500 4500 10000)
-#vstep_list=(500 700 1500)
-#number=10000
-#max_item=`echo "${number}-1" | bc`
-xspec_startup_xcm=${PWD}/nthcomp+relxillCp.xcm  #change the localtion of data into global location not e.g. ../../analysis
-################save real residual spectrum
+xspec_startup_xcm=${PWD}/nthcomp+relxillCp.xcm  #change the location of data into a global location not e.g. ../../analysis
+################create the routine to run error command on NH of the plasma
 
 routine_sim=${DIR_home}/simulated_spectrum_for_NH.xcm
 echo "start to make the routine file for simulation"
