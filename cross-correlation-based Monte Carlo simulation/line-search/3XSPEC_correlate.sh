@@ -10,7 +10,7 @@ MC_spectrum=${DIR_home}/MC_spectrum
 model_dir=${DIR_home}/model
 res_spectrum=${DIR_home}/res
 
-num_simulations=10  ###number of simulated residual spectra
+num_simulations=10000  ###number of simulated residual spectra
 max_item=`echo "${number}-1" | bc`
 
 Emin=0.4  ### RGS energy band: 0.4-1.77 keV
@@ -19,7 +19,7 @@ Emax=1.77
 xspec_startup_xcm=${PWD}/nthcomp+relxillCp.xcm  #change the location of data into global location not e.g. ../../analysis
 ################cross-correlate residual and model spectra
 linewidth=(0 500 1500 4500 10000)
-for a in 0  
+for a in 0 1 2 3 4
 do
 echo "linewidth: ${linewidth[$a]} and number of points: ${num_points}"
 
@@ -27,11 +27,11 @@ python3<<EOF
 import numpy as np
 import pandas as pd
 
-print('start')
 ###read real residual spectrum
 infile='${DIR_home}/real_res_rgs.qdp'
 data = pd.read_csv(infile,header=None,skiprows=3, delimiter=' ')
 x=data[0];errx=data[1];y=data[2];erry=data[3]
+
 ###read model spectra and cross-correlate with the real residual spectrum
 inmodel='${DIR_home}/merge_model_lw'+str(${linewidth[$a]})+'.txt'
 df_model=pd.read_csv(inmodel,header=None,delimiter=' ')
@@ -44,6 +44,7 @@ for i in range(num_model):
 	correlate.append(cor)
 en=np.logspace(np.log10(${Emin}),np.log10(${Emax}),num=num_model)
 np.savetxt('${DIR_home}/'+'raw_correlate_real_lw'+str(${linewidth[$a]})+'.txt',np.column_stack([en,np.array(correlate)]), fmt='%.9f')
+
 ###read simulated residual spectra and cross-correlate with model spectra
 sim_res_file='${DIR_home}/merge_res_'+str(${num_simulations})+'.txt'
 df_sim=pd.read_csv(sim_res_file,header=None,delimiter=' ')
