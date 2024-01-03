@@ -20,7 +20,7 @@ linewidth=(500 1500 4500 10000)       ### scanned linewidth grids
 vstep_list=(300 700 1500 3000)        ### corresponding step of velocities
 
 xspec_startup_xcm=${PWD}/nthcomp+relxillCp.xcm  #change the location of data into a global location not e.g. ../../analysis
-model_plus_plasma="zashift*mtable{xabs_xs.fits}*pow"
+
 ################create routines to produce model spectra with absorption lines
 for a in 0 1 2 3
 do
@@ -33,9 +33,9 @@ echo "@${xspec_startup_xcm}" > ${routine_sim}
 echo "query yes"            >> ${routine_sim}
 echo "abun lpgs"            >> ${routine_sim}
 echo "model zashift*mtable{xabs_xs.fits}*pow"     >> ${routine_sim}
-	echo "/*"                   >> ${routine_sim}
-	echo "new 1 ${redshift} "                   >> ${routine_sim}
-	echo "new 5 1 "                   >> ${routine_sim}
+echo "/*"                   >> ${routine_sim}
+echo "new 1 ${redshift} "                   >> ${routine_sim}
+echo "new 5 1 "                   >> ${routine_sim}
 	echo "new 7 0 "                   >> ${routine_sim}
 	echo "new 4 ${linewidth[$a]}"                 >> ${routine_sim}
 	#	echo "new 2 ${NH} -1"             >> ${routine_sim}
