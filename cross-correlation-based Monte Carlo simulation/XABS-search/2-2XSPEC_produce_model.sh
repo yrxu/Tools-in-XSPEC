@@ -1,5 +1,6 @@
 #!/bin/bash
-#export OMP_NUM_THREADS=4
+N_cpu=4  # Define parallelization parameters
+
 mkdir ${PWD}/simulation
 DIR_home=${PWD}/simulation
 mkdir ${DIR_home}/MC_spectrum
@@ -9,14 +10,14 @@ MC_spectrum=${DIR_home}/MC_spectrum
 model_dir=${DIR_home}/model
 NH_dir=${DIR_home}/NH_grids
 
-redshift=0.048
-xi_min=0.0
-xi_max=5.0
+redshift=0.048  ### the redshift of the source
+xi_min=0.0 
+xi_max=5.0      ### scanned logxi grids
 xi_step=0.1
 zv_min=0
-zv_max=105000
-linewidth=(100 1500 4500)
-vstep_list=(300 700 1500)
+zv_max=105000   ### scanned velocity grids
+linewidth=(500 1500 4500 10000)  ### scanned linewidth grids
+vstep_list=(300 700 1500)        ### corresponding step of velocities
 
 #logNH_min=19.0 ### cm^-2
 #logNH_max=23.0
@@ -25,7 +26,7 @@ vstep_list=(300 700 1500)
 #min_energy=0.4
 #max_energy=1.77
 
-xspec_startup_xcm=${PWD}/nthcomp+relxillCp.xcm  #change the localtion of data into global location not e.g. ../../analysis
+xspec_startup_xcm=${PWD}/nthcomp+relxillCp.xcm  #change the location of data into a global location not e.g. ../../analysis
 
 ################save real residual spectrum
 #linewidth=(0 100 500 1000 1500 2000 5000)
