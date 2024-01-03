@@ -23,7 +23,7 @@ xi_max=5.0
 xi_step=0.1
 linewidth=( 500 1500 4500 10000)
 xspec_startup_xcm=${PWD}/nthcomp+relxillCp.xcm  #change the location of data into a global location not e.g. ../../analysis
-model_plus_plamsa="constant*tbabs*zashift*mtable{xabs_xs.fits}*(nthComp+relxillCp)" #the model included an XABS model in XSPEC
+model_plus_plamsa="constant*tbabs*zashift*mtable{xabs_xs.fits}*(nthComp+relxillCp)" #the model included an XABS_XS model, see how to generate XABS_XS in directory: /SPEX-to-XSPEC/
 
 index_fc=7   # the index of the covering factor of XABS 
 index_z=8    # the index of the redshift of XABS   
@@ -70,7 +70,7 @@ do
 	echo " "                                                                            >> ${routine_sim}
 	
 	done
-done
+
 
 echo "mv simulated_NH_${inst[0]}.fak ${NH_dir} "                                            >> ${routine_sim}
 echo "mv simulated_NH_${inst[1]}.fak ${NH_dir} "                                            >> ${routine_sim}
@@ -85,50 +85,39 @@ EOF
 
 
 echo "merge NH and logxi into one file"
-for a in 0 1 2 3
+
+outputfile=${NH_dir}/NH_lw${linewidth[$a]}.txt
+rm ${outputfile}
+for xi in $(seq ${xi_min} ${xi_step} ${xi_max})
 do
-	outputfile=${NH_dir}/NH_lw${linewidth[$a]}.txt
-	rm ${outputfile}
-	for xi in $(seq ${xi_min} ${xi_step} ${xi_max})
-	do
-	input_file=${NH_dir}/NH_lw${linewidth[$a]}_logxi${xi}.log
-	if [ ! -f "${input_file}" ]
-	then
-		echo "File ${input_file} does not exists"
-	else      
-		NH=`grep '#     ${index_NH}' ${input_file} | awk '{print $4}'`
-		echo ${xi} ${NH}  >> ${outputfile}
-	fi
-	done
+input_file=${NH_dir}/NH_lw${linewidth[$a]}_logxi${xi}.log
+if [ ! -f "${input_file}" ]
+then
+	echo "File ${input_file} does not exists"
+else      
+	NH=`grep '#     ${index_NH}' ${input_file} | awk '{print $4}'`
+	echo ${xi} ${NH}  >> ${outputfile}
+fi
 done
+
 python3<<EOF
 import numpy as np
 from scipy import optimize, stats
-def para(x, m,b, c):
+def para(x, m,b, c):  ###just a rough assumption, perhaps a linear function is also ok
 	return m * x**b + c
 def obtain_factor(x_best,y_best,m,b,c):
 	return y_best/10**para(x_best,m,b,c)
 dtype=[('x','float'),('y','float')]
 x_best=${logxi_best}
-y_best=${NH_best}
-linewidth_best='100'
-infile='${NH_dir}/NH_lw'+linewidth_best+'.txt'
+y_best=${NH_best}   # 1e24cm^-2
+infile='${NH_dir}/NH_lw'+str(${linewidth[$a]})+'.txt'
 data = np.loadtxt(infile,dtype=dtype)
 x=data['x'];y=data['y']
 pars, pars_covariance = optimize.curve_fit(para, x, np.log10(y), [1e-3,2,1e-5])
-f=obtain_factor(x_best,y_best,pars[0],pars[1],pars[2])
-#linewidth=['500','1500','100']
-linewidth=['100']
-for i in range(len(linewidth)):
-	infile='${NH_dir}/NH_lw'+linewidth[i]+'.txt'
-	data = np.loadtxt(infile,dtype=dtype)
-	x=data['x'];y=data['y']
-	pars, pars_covariance = optimize.curve_fit(para, x, np.log10(y), [1e-3,2,1e-5])
-	#f=obtain_factor(x_best[i],y_best[i],pars[0],pars[1],pars[2])
-	y_save=f*10**para( x, pars[0],pars[1],pars[2])
-	fmt='%1.1f','%1.9f'
-	np.savetxt('${NH_dir}/'+'NH_logxi_grids_lw'+linewidth[i]+'.txt', np.column_stack([x,y_save]),fmt=fmt)  
+f=obtain_factor(x_best,y_best,pars[0],pars[1],pars[2])   ###roughly correct the predicted NH based on fitting results
+y_save=f*10**para( x, pars[0],pars[1],pars[2])
+np.savetxt('${NH_dir}/'+'NH_logxi_grids_lw'+str(${linewidth[$a]})+'.txt', np.column_stack([x,y_save]),fmt='%.9f')  
 EOF
 
-
+done
 echo "done"
