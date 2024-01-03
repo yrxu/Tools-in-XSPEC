@@ -95,7 +95,7 @@ if [ ! -f "${input_file}" ]
 then
 	echo "File ${input_file} does not exists"
 else      
-	NH=`grep '#     ${index_NH}' ${input_file} | awk '{print $4}'`
+	NH=`grep "#     ${index_NH}" ${input_file} | awk '{print $4}'`
 	echo ${xi} ${NH}  >> ${outputfile}
 fi
 done
