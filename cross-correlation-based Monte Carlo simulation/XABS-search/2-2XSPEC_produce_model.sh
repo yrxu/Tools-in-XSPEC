@@ -19,6 +19,8 @@ zv_max=105000   ###km/s scanned velocity grids
 linewidth=(500 1500 4500 10000)       ### scanned linewidth grids
 vstep_list=(300 700 1500 3000)        ### corresponding step of velocities
 
+Emin=0.4 #keV
+Emax=1.77 #keV RGS energy band: 0.4-1.77 keV
 xspec_startup_xcm=${PWD}/nthcomp+relxillCp.xcm  #change the location of data into a global location not e.g. ../../analysis
 
 index_redshift=1   # the index of the redshift of zashift
@@ -65,7 +67,7 @@ do
 		z=`echo "scale=7;${j}/-300000" | bc`
 		echo "new ${index_z} ${z},0.01,-1,-1,1,1"                 >> ${routine_sim}
 		echo " "                          >> ${routine_sim}
-		echo "ignore 1:**-0.4 1.77-** 2:**-1.77 8.0-**"    >> ${routine_sim}
+		echo "ignore 1:**-${Emin} ${Emax}-** 2:**-1.77 8.0-**"    >> ${routine_sim}
 				#echo "cpd /null"                    >> ${routine_sim}
 			echo "setp e"                     >> ${routine_sim}
 			echo "plot uf"                   >> ${routine_sim}
