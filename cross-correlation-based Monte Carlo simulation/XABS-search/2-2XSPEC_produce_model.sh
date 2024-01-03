@@ -44,35 +44,28 @@ echo "model zashift*mtable{xabs_xs.fits}*pow"     >> ${routine_sim}
 echo "/*"                   >> ${routine_sim}
 echo "new ${index_redshift} ${redshift} "                   >> ${routine_sim}
 echo "new ${index_fc} 1 "                   >> ${routine_sim}
-echo "new 7 0 "                   >> ${routine_sim}
+echo "new ${index_gamm} 0 "                   >> ${routine_sim}  ### we want a flat continuum
 echo "new ${index_v} ${linewidth[$a]}"                 >> ${routine_sim}
 
 echo "start to generate loop" 
-	echo "cpd /null"                    >> ${routine_sim}
-	IFS=$'\n';
-	for LINE in $(cat ${NH_dir}/NH_logxi_grids_lw${linewidth[$a]}.txt)
-	do
-		#NH=$(echo "scale=8; e((${lognh}-24.0)*l(10))"| bc -l )
-		xi=$(echo ${LINE} | awk '{ print $1}')
-		NH=$(echo ${LINE} | awk '{ print $2}')
-		echo "logxi: ${xi}; NH: ${NH} 1e24 cm^-2 "
-		echo "#logxi: ${xi}; NH: ${NH}" >> ${routine_sim}
-		echo "new 3 ${NH} -1"             >> ${routine_sim}
-		echo "new 2 ${xi} "         >> ${routine_sim}
+echo "cpd /null"                    >> ${routine_sim}
+IFS=$'\n';
+for LINE in $(cat ${NH_dir}/NH_logxi_grids_lw${linewidth[$a]}.txt)
+do
+	xi=$(echo ${LINE} | awk '{ print $1}')
+	NH=$(echo ${LINE} | awk '{ print $2}')
+	echo "logxi: ${xi}; NH: ${NH} 1e24 cm^-2 "
+	echo "#logxi: ${xi}; NH: ${NH}" >> ${routine_sim}
+	echo "new ${index_NH} ${NH} "             >> ${routine_sim}
+	echo "new ${index_logxi} ${xi} "         >> ${routine_sim}
 
 	#	echo "start to generate loop" 
-		for j in $(seq ${zv_min} ${vstep_list[$a]} ${zv_max})
+	for j in $(seq ${zv_min} ${vstep_list[$a]} ${zv_max})
 		do 
-			z=`echo "scale=7;${j}/-300000" | bc`
-		
-		#energy=$(echo "scale=8; e((${logmin}+$y*$logestep)*l(10))"| bc -l )
-		#lw=$(echo "scale=8; ${energy}*${linewidth[$a]}/300000"| bc -l )
-			#echo "#logxi: ${xi}; z: ${z}" >> ${routine_sim}
-	#echo "index" $(($y+1))"/"${num_points}
-
-			echo "new 6 ${z},0.01,-1,-1,1,1"                 >> ${routine_sim}
-			echo " "                          >> ${routine_sim}
-			echo "ignore 1:**-0.4 1.77-** 2:**-1.77 8.0-**"    >> ${routine_sim}
+		z=`echo "scale=7;${j}/-300000" | bc`
+		echo "new ${index_z} ${z},0.01,-1,-1,1,1"                 >> ${routine_sim}
+		echo " "                          >> ${routine_sim}
+		echo "ignore 1:**-0.4 1.77-** 2:**-1.77 8.0-**"    >> ${routine_sim}
 				#echo "cpd /null"                    >> ${routine_sim}
 			echo "setp e"                     >> ${routine_sim}
 			echo "plot uf"                   >> ${routine_sim}
