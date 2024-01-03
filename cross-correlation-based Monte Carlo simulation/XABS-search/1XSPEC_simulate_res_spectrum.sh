@@ -45,7 +45,7 @@ echo "query yes"                                                                
 echo "abun lpgs"                                                                  >> ${routine_sim}
 echo "data 2:2 none"                                                              >> ${routine_sim}
 echo "# spectrum ${n}"                                                            >> ${routine_sim}
-echo "fakeit"                                                                     >> ${routine_sim}
+echo "fakeit"                                                                     >> ${routine_sim} ### the background and response files should be in the same directory of this script
 echo "y"                                                                          >> ${routine_sim}
 echo "${n}_"                                                                      >> ${routine_sim}
 echo "simulated_${n}_rgs.fak"                                                     >> ${routine_sim}
