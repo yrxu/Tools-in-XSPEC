@@ -21,6 +21,14 @@ vstep_list=(300 700 1500 3000)        ### corresponding step of velocities
 
 xspec_startup_xcm=${PWD}/nthcomp+relxillCp.xcm  #change the location of data into a global location not e.g. ../../analysis
 
+index_redshift=1   # the index of the redshift of zashift
+index_fc=5   # the index of the covering factor of XABS 
+index_z=6    # the index of the redshift of XABS   
+index_logxi=2 # the index of logxi of XABS 
+index_v=4    # the index of line width of XABS 
+index_NH=3   # the index of NH of XABS 
+index_gamm=7   # the index of gamma of pow 
+index_norm=8   # the index of norm of pow
 ################create routines to produce model spectra with absorption lines
 for a in 0 1 2 3
 do
@@ -34,12 +42,12 @@ echo "query yes"            >> ${routine_sim}
 echo "abun lpgs"            >> ${routine_sim}
 echo "model zashift*mtable{xabs_xs.fits}*pow"     >> ${routine_sim}
 echo "/*"                   >> ${routine_sim}
-echo "new 1 ${redshift} "                   >> ${routine_sim}
-echo "new 5 1 "                   >> ${routine_sim}
-	echo "new 7 0 "                   >> ${routine_sim}
-	echo "new 4 ${linewidth[$a]}"                 >> ${routine_sim}
-	#	echo "new 2 ${NH} -1"             >> ${routine_sim}
-	echo "start to generate loop" 
+echo "new ${index_redshift} ${redshift} "                   >> ${routine_sim}
+echo "new ${index_fc} 1 "                   >> ${routine_sim}
+echo "new 7 0 "                   >> ${routine_sim}
+echo "new ${index_v} ${linewidth[$a]}"                 >> ${routine_sim}
+
+echo "start to generate loop" 
 	echo "cpd /null"                    >> ${routine_sim}
 	IFS=$'\n';
 	for LINE in $(cat ${NH_dir}/NH_logxi_grids_lw${linewidth[$a]}.txt)
