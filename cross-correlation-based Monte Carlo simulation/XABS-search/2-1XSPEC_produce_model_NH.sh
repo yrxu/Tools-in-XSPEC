@@ -40,7 +40,7 @@ echo "query yes"                                                                
 echo "abun lpgs"                                                                            >> ${routine_sim}
 echo " "                                                                                    >> ${routine_sim}
 echo "#generate real residual spectrum routine"                                             >> ${routine_sim}
-echo "fakeit"                                                                               >> ${routine_sim}
+echo "fakeit"                                                                               >> ${routine_sim} ### the background and response files should be in the same directory of this script
 echo "y"                                                                                    >> ${routine_sim}
 echo "NH_"                                                                                  >> ${routine_sim}
 echo "simulated_NH_${inst[0]}.fak"                                                          >> ${routine_sim}
