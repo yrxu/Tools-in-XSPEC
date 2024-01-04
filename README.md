@@ -1,7 +1,7 @@
 # Tools-in-XSPEC
-Useful tools for data analysis in XSPEC
+**Useful tools for data analysis in XSPEC**
 
-Create an XSPEC-version table model from PION/XABS in SPEX, see SPEX-to-XSPEC directory:
+**Create an XSPEC-version table model from PION/XABS in SPEX, see SPEX-to-XSPEC directory:**
 
 1. Use the PION/XABS model in SPEX to generate spectra with various parameters:
 - PION/XABS-to-SPECTRA.py
@@ -13,24 +13,24 @@ Cite Parker, Michael L. et al. 2019 when you use them.
 
 
 
-Use a Gaussian line to search lines in spectra:
+**Use a Gaussian line to search lines in spectra:**
 
 - Gaussian_line_scan_routine_in_XSPEC.sh
 
-Use photoionization absorption/emission model to search outflow solutions over multiple spectra:
+**Use photoionization absorption/emission model to search outflow solutions over multiple spectra:**
 
 - XSPEC_absorption/emission_grid.sh (here the emission uses a general-version of PION with Omeg=1)
 
 Cite Xu, Yerong et al. 2023 when you use them.
 
 
-Perform cross-correlation-based Monte Carlo simulations to estimate line significance (including look-elsewhere effects) in spectra:
+**Perform cross-correlation-based Monte Carlo simulations to estimate line significance (including look-elsewhere effects) in spectra:**
 
 - see /cross-correlation-based Monte Carlo simulations/line-search/ directory and follow use scripts in the order (currently only one spectrum is considered)
 
 Cite Xu, Yerong et al. 2022 when you use them.
 
-Perform cross-correlation-based Monte Carlo simulations to estimate the significance of plasma detection (including look-elsewhere effects):
+**Perform cross-correlation-based Monte Carlo simulations to estimate the significance of plasma detection (including look-elsewhere effects):**
 
 - see /cross-correlation-based Monte Carlo simulations/XABS-search/ directory and follow use scripts in the order (currently only one spectrum and absorption model is considered)
 
