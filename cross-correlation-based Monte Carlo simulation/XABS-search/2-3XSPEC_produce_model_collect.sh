@@ -21,7 +21,7 @@ vstep_list=(300 700 1500 3000)        ### corresponding step of velocities
 xspec_startup_xcm=${PWD}/nthcomp+relxillCp.xcm  #change the location of data into a global location not e.g. ../../analysis
 ################collect generated model spectra and produce the predicted residual spectra by models
 
-for a in 0
+for a in 0 1 2 3
 do
 echo "linewidth: ${linewidth[$a]} km/s with a step of velocity: ${vstep_list[$a]} km/s"
 	#for lognh in $(seq ${logNH_min} ${logNH_step} ${logNH_max})
