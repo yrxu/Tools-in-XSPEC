@@ -17,14 +17,14 @@ zv_max=105000   ###km/s scanned velocity grids
 linewidth=(500 1500 4500 10000)       ### scanned linewidth grids
 vstep_list=(300 700 1500 3000)        ### corresponding step of velocities
 
-num_simulations=10000   
+num_simulations=1000   
 max_item=`echo "${number}-1" | bc`
 
 
 xspec_startup_xcm=${PWD}/nthcomp+relxillCp.xcm #change the location of data into a global location not e.g. ../../analysis
 
 ################cross-correlate residual and model spectra
-for a in 0 1 2 3
+for a in 0 
 do
 echo "linewidth: ${linewidth[$a]} km/s"
 
@@ -62,7 +62,7 @@ for i in np.arange(${xi_min}, ${xi_max}+0.01,${xi_step}):
 np.savetxt('${DIR_home}/'+'raw_correlate_real_lw'+str(${linewidth[$a]})+'.txt',np.column_stack([ np.array(xi), np.array(zv), np.array(correlate)]), fmt='%.9f')
 
 ###read simulated residual spectra and cross-correlate with model spectra
-sim_res_file='${DIR_home}/merge_res_'+str(${num_simulations})+'_area.txt'
+sim_res_file='${DIR_home}/merge_res_'+str(${num_simulations})+'.txt'
 df_sim=pd.read_csv(sim_res_file,header=None,delimiter=' ')
 paramlist=list(itertools.product(np.array(df_sim.iloc[:,1:]).T,np.array(df.iloc[:,1:]).T))
 
@@ -84,16 +84,16 @@ N_corr_real=[]
 for i in range(num_model):
 	corr=df_raw.iloc[i][3:]	###skip the logxi and zv column
 	count=len(corr);corr[abs(corr)>1e100]=0
- 	corr_mean=np.mean(corr);print(corr_mean)
+	corr_mean=np.mean(corr)
 	if i==0:
 		np.savetxt('${DIR_home}/'+'test.txt',corr, fmt='%.9f')
 	norm=np.sqrt(sum([k*k for k in corr])/count)
- 	print('norm:',norm)	
+	print('norm:',norm)	
 	n_corr=[c/norm for c in corr]
 	N_corr.append(n_corr)
 	n_corr_real=correlate[i]/norm     ###renormalize the real CC
 	N_corr_real.append(n_corr_real)
-	print('calculate the normalized CC of the '+str(i)+'th model point')
+	print('calculate the normalized cross-correlation of the '+str(i)+'th model point')
 
 np.savetxt('${DIR_home}/'+'norm_correlate_sim_lw'+str(${linewidth[$a]})+'.txt',np.column_stack([ np.array(xi), np.array(zv),np.array(N_corr)]), fmt='%.9f')
 np.savetxt('${DIR_home}/'+'norm_correlate_real_lw'+str(${linewidth[$a]})+'.txt',np.column_stack([ np.array(xi), np.array(zv),np.array(N_corr_real)]), fmt='%.9f')
