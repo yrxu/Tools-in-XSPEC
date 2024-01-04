@@ -76,7 +76,7 @@ for i in range(num_models):
 	true_pvalue=len(temp)/num_simulations
 	true_p_value.append(true_pvalue)
 
-true_significance=[pvalue_to_sigma(i) if pvalue_to_sigma(i)!=np.infty else max_sigma for itrue_p_value]
+true_significance=[pvalue_to_sigma(i) if pvalue_to_sigma(i)!=np.infty else max_sigma for i in true_p_value]
 np.savetxt('${DIR_home}/'+'true_significance_lw'+str(${linewidth[$a]})+'.txt',np.column_stack([np.array(xi), np.array(zv),np.array(true_significance)]), fmt='%.9f')
 
 EOF
