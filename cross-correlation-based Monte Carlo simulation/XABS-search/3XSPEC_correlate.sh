@@ -17,14 +17,14 @@ zv_max=105000   ###km/s scanned velocity grids
 linewidth=(500 1500 4500 10000)       ### scanned linewidth grids
 vstep_list=(300 700 1500 3000)        ### corresponding step of velocities
 
-num_simulations=1000   
+num_simulations=10000   
 max_item=`echo "${number}-1" | bc`
 
 
 xspec_startup_xcm=${PWD}/nthcomp+relxillCp.xcm #change the location of data into a global location not e.g. ../../analysis
 
 ################cross-correlate residual and model spectra
-for a in 0 
+for a in 0 1 2 3 
 do
 echo "linewidth: ${linewidth[$a]} km/s"
 
