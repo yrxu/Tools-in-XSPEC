@@ -32,8 +32,9 @@ import numpy as np
 ystack=[]
 for i in np.arange(${xi_min}, ${xi_max}+0.01,${xi_step}):
 	for j in np.arange(${zv_min},${zv_max}+1,${vstep_list[$a]}):
-		infile='${model_dir}/'+'model_lw'+str(${linewidth[$a]})+'_xi'+str(round(i,1))+'_zv'+str(j)+'.qdp' 
-		infile2='${model_dir}/'+'model_lw'+str(${linewidth[$a]})+'_xi'+str(round(i,1))+'_zv'+str(j)+'_bald.qdp' 
+ 		logxi='%.2f'%i
+		infile='${model_dir}/'+'model_lw'+str(${linewidth[$a]})+'_xi'+str(logxi)+'_zv'+str(j)+'.qdp' 
+		infile2='${model_dir}/'+'model_lw'+str(${linewidth[$a]})+'_xi'+str(logxi)+'_zv'+str(j)+'_bald.qdp' 
 		data=np.loadtxt(infile,skiprows=3,dtype=str)
 		data2=np.loadtxt(infile2,skiprows=3,dtype=str)
 		x=data[:,0];y=data[:,4]
