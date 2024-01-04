@@ -93,7 +93,7 @@ for i in range(num_model):
 	N_corr.append(n_corr)
 	n_corr_real=correlate[i]/norm     ###renormalize the real CC
 	N_corr_real.append(n_corr_real)
-	print('calculate the normalized significance of the '+str(i)+'th model point')
+	print('calculate the normalized CC of the '+str(i)+'th model point')
 
 np.savetxt('${DIR_home}/'+'norm_correlate_sim_lw'+str(${linewidth[$a]})+'.txt',np.column_stack([ np.array(xi), np.array(zv),np.array(N_corr)]), fmt='%.9f')
 np.savetxt('${DIR_home}/'+'norm_correlate_real_lw'+str(${linewidth[$a]})+'.txt',np.column_stack([ np.array(xi), np.array(zv),np.array(N_corr_real)]), fmt='%.9f')
