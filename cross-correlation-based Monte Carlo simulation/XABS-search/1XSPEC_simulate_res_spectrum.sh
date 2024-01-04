@@ -50,7 +50,7 @@ echo "y"                                                                        
 echo "${n}_"                                                                      >> ${routine_sim}
 echo "simulated_${n}_rgs.fak"                                                     >> ${routine_sim}
 echo " "                                                                          >> ${routine_sim}
-echo "ignore 1:**-${Emin[0]} ${Emax[0]}-** 2:**-${Emin[1]} ${Emax[1]}-**"         >> ${routine_sim}
+echo "ignore 1:**-${Emin} ${Emax}-** "         					  >> ${routine_sim}
 #echo "fit"                                                                       >> ${routine_sim} ###given my experiences, this step is not necessary, but ideally it should be executed. 
 echo "cpd /null"                                                                  >> ${routine_sim}
 echo "setp e"                                                                     >> ${routine_sim}
