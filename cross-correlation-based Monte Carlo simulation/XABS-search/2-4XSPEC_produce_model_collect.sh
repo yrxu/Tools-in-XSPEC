@@ -35,10 +35,10 @@ for i in np.arange(${xi_min}, ${xi_max}+0.01,${xi_step}):
  		logxi='%.2f'%i
 		infile='${model_dir}/'+'model_lw'+str(${linewidth[$a]})+'_xi'+str(logxi)+'_zv'+str(j)+'.qdp' 
 		infile2='${model_dir}/'+'model_lw'+str(${linewidth[$a]})+'_xi'+str(logxi)+'_zv'+str(j)+'_bald.qdp' 
-		data=np.loadtxt(infile,skiprows=3,dtype=str)
-		data2=np.loadtxt(infile2,skiprows=3,dtype=str)
-		x=data[:,0];y=data[:,4]
-		x2=data2[:,0];y2=data2[:,4]
+  		data=pd.read_csv(infile,header=None, skiprows=3,delimiter=' ')
+    		data2=pd.read_csv(infile2,header=None, skiprows=3,delimiter=' ')
+                x=np.array(data[0]);y=np.array(data[4])
+                x2=np.array(data2[0]);y2=np.array(data2[4])
 		if len(ystack)==0:
 			ystack.append(x)
 		y_sub=[n - m  for n,m in zip(y,y2)]  ###remove the effects of edges, leaving only lines
