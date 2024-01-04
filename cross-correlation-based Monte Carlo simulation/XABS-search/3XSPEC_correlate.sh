@@ -23,7 +23,7 @@ max_item=`echo "${number}-1" | bc`
 
 xspec_startup_xcm=${PWD}/nthcomp+relxillCp.xcm #change the location of data into a global location not e.g. ../../analysis
 
-################start cross-correlations
+################cross-correlate residual and model spectra
 for a in 0 1 2 3
 do
 echo "linewidth: ${linewidth[$a]} km/s"
@@ -35,17 +35,12 @@ import time
 import itertools
 import math
 import multiprocessing as mp
-def where_is_str(array,string="NO"):
-	index=np.where(array== string)
-	seen=set()
-	dupes=[x for x in index[0] if x in seen or seen.add(x)]
-	return dupes
 def func(params):
         a=params[0]
         b=params[1]
         return np.correlate(a,b)
-#dtype=[('x','float'),('errx','float'),('y','float'),('erry','float')]
-infile='${DIR_home}/real_res_area.qdp'
+
+infile='${DIR_home}/real_res.qdp'
 data = np.loadtxt(infile,skiprows=3,dtype=str)
 index=where_is_str(data)
 data=np.delete(data,index,0)
