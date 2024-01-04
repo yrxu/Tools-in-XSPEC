@@ -9,47 +9,19 @@ MC_spectrum=${DIR_home}/MC_spectrum
 model_dir=${DIR_home}/model
 
 
-
-xi_min=0.0
-xi_max=5.0
+xi_min=0.0 
+xi_max=5.0      ### scanned logxi grids
 xi_step=0.1
 zv_min=0
-zv_max=105000
-linewidth=(500 1500 100)
-vstep_list=(500 700 300)
+zv_max=105000   ###km/s scanned velocity grids
+linewidth=(500 1500 4500 10000)       ### scanned linewidth grids
+vstep_list=(300 700 1500 3000)        ### corresponding step of velocities
 
-#logNH_min=19.0 ### cm^-2
-#logNH_max=23.0
-#logNH_step=1.0
 
-#min_energy=0.4
-#max_energy=1.77
+xspec_startup_xcm=${PWD}/nthcomp+relxillCp.xcm  #change the location of data into a global location not e.g. ../../analysis
+################collect generated model spectra and produce the predicted residual spectra by models
 
-xspec_startup_xcm=${PWD}/nthcomp+relxillCp.xcm  #change the localtion of data into global location not e.g. ../../analysis
-#xspec_startup_xcm=${PWD}/ism_WA_relxilllpCp+diskbb+3gaussian_2021.xcm  #change the localtion of data into global location not e.g. ../../analysis
-################save real residual spectrum
-#linewidth=(0 100 500 1000 1500 2000 5000)
-#num_points=2000
-
-#Generate a powerlaw model first
-#xspec<<EOF
-#@${xspec_startup_xcm}
-#query yes
-#abun lpgs
-#model pow
-#/*
-#new 1 2
-#cpd /null
-#setp e
-#pl eeuf
-#setp command wd model_power
-#plot
-#setp del all
-#exit
-#EOF
-#mv model_power.qdp ${model_dir}
-
-for a in 2
+for a in 0
 do
 echo "linewidth: ${linewidth[$a]} km/s with a step of velocity: ${vstep_list[$a]} km/s"
 	#for lognh in $(seq ${logNH_min} ${logNH_step} ${logNH_max})
