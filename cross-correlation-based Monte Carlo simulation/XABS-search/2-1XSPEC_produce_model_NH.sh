@@ -116,6 +116,7 @@ x=data['x'];y=data['y']
 pars, pars_covariance = optimize.curve_fit(para, x, np.log10(y), [1e-3,2,1e-5])
 f=obtain_factor(x_best,y_best,pars[0],pars[1],pars[2])   ###roughly correct the predicted NH based on fitting results
 y_save=f*10**para( x, pars[0],pars[1],pars[2])
+fmts='%.2f','%.9f'
 np.savetxt('${NH_dir}/'+'NH_logxi_grids_lw'+str(${linewidth[$a]})+'.txt', np.column_stack([x,y_save]),fmt='%.9f')  
 EOF
 
