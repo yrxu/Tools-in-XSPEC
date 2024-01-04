@@ -68,7 +68,6 @@ do
 		echo "new ${index_z} ${z},0.01,-1,-1,1,1"                 >> ${routine_sim}
 		echo " "                          >> ${routine_sim}
 		echo "ignore 1:**-${Emin} ${Emax}-** 2:**-1.77 8.0-**"    >> ${routine_sim}
-				#echo "cpd /null"                    >> ${routine_sim}
 			echo "setp e"                     >> ${routine_sim}
 			echo "plot uf"                   >> ${routine_sim}
 			echo "plot "                      >> ${routine_sim}
