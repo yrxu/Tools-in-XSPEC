@@ -39,47 +39,48 @@ routine_sim=${DIR_home}/simulated_lw${linewidth[$a]}_model.xcm
 
 echo "logxi = " ${xi_min} "-" ${xi_max} ", with step " ${xi_step}	
 echo "start to make the routine file to generate model"
-echo "@${xspec_startup_xcm}" > ${routine_sim}
-echo "query yes"            >> ${routine_sim}
-echo "abun lpgs"            >> ${routine_sim}
-echo "model zashift*mtable{xabs_xs.fits}*pow"     >> ${routine_sim}
-echo "/*"                   >> ${routine_sim}
-echo "new ${index_redshift} ${redshift} "                   >> ${routine_sim}
-echo "new ${index_fc} 1 "                   >> ${routine_sim}
-echo "new ${index_gamm} 0 "                   >> ${routine_sim}  ### we want a flat continuum
-echo "new ${index_v} ${linewidth[$a]}"                 >> ${routine_sim}
+echo "@${xspec_startup_xcm}" 							  			   > ${routine_sim}
+echo "query yes"            							  			  >> ${routine_sim}
+echo "abun lpgs"            							  			  >> ${routine_sim}
+echo "data 2:2 none"        							  			  >> ${routine_sim}  ###only consider one spectrum
+echo "model zashift*mtable{xabs_xs.fits}*pow"     							  >> ${routine_sim}
+echo "/*"                   							  			  >> ${routine_sim}
+echo "new ${index_redshift} ${redshift} "                   					          >> ${routine_sim}
+echo "new ${index_fc} 1 "                   							          >> ${routine_sim}
+echo "new ${index_gamm} 0 "                   							          >> ${routine_sim}  ### we want a flat continuum
+echo "new ${index_v} ${linewidth[$a]}"                 							  >> ${routine_sim}
 
 echo "start to generate loop" 
-echo "cpd /null"                    >> ${routine_sim}
+echo "cpd /null"                    							                  >> ${routine_sim}
 IFS=$'\n';
 for LINE in $(cat ${NH_dir}/NH_logxi_grids_lw${linewidth[$a]}.txt)
 do
 	xi=$(echo ${LINE} | awk '{ print $1}')
 	NH=$(echo ${LINE} | awk '{ print $2}')
 	echo "logxi: ${xi}; NH: ${NH} 1e24 cm^-2 "
-	echo "#logxi: ${xi}; NH: ${NH}" >> ${routine_sim}
-	echo "new ${index_NH} ${NH} "             >> ${routine_sim}
-	echo "new ${index_logxi} ${xi} "         >> ${routine_sim}
+	echo "#logxi: ${xi}; NH: ${NH}" 							          >> ${routine_sim}
+	echo "new ${index_NH} ${NH} "             							  >> ${routine_sim}
+	echo "new ${index_logxi} ${xi} "         							  >> ${routine_sim}
 
 	#	echo "start to generate loop" 
 	for j in $(seq ${zv_min} ${vstep_list[$a]} ${zv_max})
 		do 
 		z=`echo "scale=7;${j}/-300000" | bc`
-		echo "new ${index_z} ${z},0.01,-1,-1,1,1"                 >> ${routine_sim}
-		echo " "                          >> ${routine_sim}
-		echo "ignore 1:**-${Emin} ${Emax}-** 2:**-1.77 8.0-**"    >> ${routine_sim}
-			echo "setp e"                     >> ${routine_sim}
-			echo "plot uf"                   >> ${routine_sim}
-			echo "plot "                      >> ${routine_sim}
-			echo "setplot command wd model_lw${linewidth[$a]}_xi${xi}_zv${j}.qdp"         >> ${routine_sim}
-			echo "plot "                      >> ${routine_sim}
-			echo "setplot list"               >> ${routine_sim}
-			echo "mv model_lw${linewidth[$a]}_xi${xi}_zv${j}.qdp ${model_dir} "                       >> ${routine_sim}
-			echo "setplot delete all"         >> ${routine_sim}	
-			echo " "                          >> ${routine_sim}
+		echo "new ${index_z} ${z},0.01,-1,-1,1,1"              					  >> ${routine_sim}
+		echo " "                          							  >> ${routine_sim}
+		echo "ignore 1:**-${Emin} ${Emax}-** "    						  >> ${routine_sim}
+		echo "setp e"                     							  >> ${routine_sim}
+		echo "plot uf"                    							  >> ${routine_sim}
+		echo "plot "                      							  >> ${routine_sim}
+		echo "setplot command wd model_lw${linewidth[$a]}_xi${xi}_zv${j}.qdp"     	          >> ${routine_sim}
+		echo "plot "                      							  >> ${routine_sim}
+		echo "setplot list"               							  >> ${routine_sim}
+		echo "mv model_lw${linewidth[$a]}_xi${xi}_zv${j}.qdp ${model_dir} "                       >> ${routine_sim}
+		echo "setplot delete all"         							  >> ${routine_sim}	
+		echo " "                          							  >> ${routine_sim}
 		done
 	done 
-	echo "exit"                 >> ${routine_sim}
+	echo "exit"                 							                  >> ${routine_sim}
 
 
 xspec<<EOF
