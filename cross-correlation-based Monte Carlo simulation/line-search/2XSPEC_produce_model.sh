@@ -26,7 +26,15 @@ echo ${logestep} ${logmin} ${logmax}
 echo "start to make the routine file to generate model"
 echo "@${xspec_startup_xcm}"                                        > ${routine_sim}
 echo "query yes"                                                   >> ${routine_sim}
-echo "abun wilm"                                                   >> ${routine_sim}
+echo "abun lpgs"                                                   >> ${routine_sim}
+echo "ignore 1:**-${Emin} ${Emax}-**"                              >> ${routine_sim}
+echo "cpd /null"                                                   >> ${routine_sim}
+echo "setp e"                                                      >> ${routine_sim}
+echo "plot uf"                                                     >> ${routine_sim}
+echo "setplot command wd continuum_model_rgs"                      >> ${routine_sim}
+echo "plot "                                                       >> ${routine_sim}
+echo "mv continuum_model_rgs.qdp ${model_dir} "                    >> ${routine_sim}
+echo "setplot delete all"                                          >> ${routine_sim}
 echo "data 2:2 none"                                               >> ${routine_sim}
 echo "model gaus"                                                  >> ${routine_sim} ### if you want to obtain the rest-frame results, use zgauss and set the redshift
 echo "/*"                                                          >> ${routine_sim}
@@ -70,11 +78,18 @@ python3<<EOF
 import pandas as pd
 import numpy as np
 import numpy as np
+def where_is_str(array,string="NO"):
+        index=np.where(array== string)
+        return list(set(index[0]))
 ystack=[]
 number=${num_points}
+infile_con='${model_dir}/continuum_model_rgs.qdp'
+data = pd.read_csv(infile_con,skiprows=3,header=None,delimiter=' ')
+index=where_is_str(np.array(data))
 for i in range(number):
 	infile='${model_dir}/'+str(i)+'_model_rgs.qdp'
 	data = pd.read_csv(infile,skiprows=3,header=None,delimiter=' ')
+ 	data = data_raw.drop(index)
 	x=np.array(data[0][:]);y=np.array(data[4][:])
 	if i==0:
 		ystack.append(x)
