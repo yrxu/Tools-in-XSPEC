@@ -88,6 +88,8 @@ for i in range(num_model):
 	if i==0:
 		np.savetxt('${DIR_home}/'+'test.txt',corr, fmt='%.9f')
 	norm=np.sqrt(sum([k*k for k in corr])/count)
+ 	if norm==0:
+  		norm=np.infty
 	print('norm:',norm)	
 	n_corr=[c/norm for c in corr]
 	N_corr.append(n_corr)
