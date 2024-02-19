@@ -82,6 +82,7 @@ for i in range(${number}):
 	infile='${res_spectrum}/'+str(i)+'_res_rgs.qdp'
 	data = pd.read_csv(infile,header=None, skiprows=3,delimiter=' ')
 	x=data[0];errx=data[1];y=data[2];erry=data[3]
+ 	erry=erry.replace(0,max(erry))
  	y=y/erry**2 
 	if i==0:
 		ystack.append(x)
