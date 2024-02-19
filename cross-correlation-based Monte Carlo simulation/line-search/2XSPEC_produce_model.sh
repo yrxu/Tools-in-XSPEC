@@ -88,7 +88,7 @@ data = pd.read_csv(infile_con,skiprows=3,header=None,delimiter=' ')
 index=where_is_str(np.array(data))
 for i in range(number):
 	infile='${model_dir}/'+str(i)+'_model_rgs.qdp'
-	data = pd.read_csv(infile,skiprows=3,header=None,delimiter=' ')
+	data_raw = pd.read_csv(infile,skiprows=3,header=None,delimiter=' ')
  	data = data_raw.drop(index)
 	x=np.array(data[0][:]);y=np.array(data[4][:])
 	if i==0:
