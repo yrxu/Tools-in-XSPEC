@@ -84,10 +84,14 @@ for i in range(num_model):
 		norm_pos=np.infty
 	else:
 		norm_pos=np.sqrt(sum([k**2 for k in corr[index_pos]])/count_pos)	
+                if norm_pos==0:
+                        norm_pos=np.infty
 	if count_neg==0:
 		norm_neg=np.infty
 	else:
 		norm_neg=np.sqrt(sum([k**2 for k in corr[index_neg]])/count_neg)
+                if norm_neg==0:
+                        norm_neg=np.infty
 	n_corr=[c/norm_pos if c>=0 else c/norm_neg for c in corr]
 	N_corr.append(n_corr)
 	n_corr_real=[c/norm_pos if c>=0 else c/norm_neg for c in correlate[i]]
