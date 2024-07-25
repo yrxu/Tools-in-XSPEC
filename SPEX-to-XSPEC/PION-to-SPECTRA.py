@@ -38,7 +38,7 @@ pool=mp.Pool(Ncpus)
 print("Running in parallel on",Ncpus,"CPUs")
 i=0
 SED_file="SED.txt" ## SED file input into PION, Y-axis: photon/s/keV, X-axis: keV
-norm_SED=1e-3 ## obtained when SED file fitted to the real data
+norm_SED=94235 ## obtained when SED file fitted to the real data but without use "e.g. dis 0.04 z" command as it does not apply in XSPEC
 filenames=[]
 for xi in logxi_vals:
     for col_density in col_density_vals:
