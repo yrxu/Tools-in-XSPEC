@@ -9,7 +9,7 @@
 - gen_table_pion/xabs.py
 - The general versions that do not need pre-calculated SEDs and the ionization balances are in the SPEX-to-XSPEC/general-version/ directory. Be cautious: a cut-off power-law component, instead of a specific SED, is used as an approximation.
 
-Cite Parker, Michael L. et al. 2019 when you use them.
+Cite Parker, Michael L. et al. 2019 and Xu, Yerong et al. 2024 when you use them.
 
 
 
@@ -21,7 +21,7 @@ Cite Parker, Michael L. et al. 2019 when you use them.
 
 - XSPEC_absorption/emission_grid.sh (here the emission uses a general-version of PION with Omeg=1)
 
-Cite Xu, Yerong et al. 2023 when you use them.
+Cite Xu, Yerong et al. 2024 when you use them.
 
 
 **Perform cross-correlation-based Monte Carlo simulations to estimate line significance (including look-elsewhere effects) in spectra:**
