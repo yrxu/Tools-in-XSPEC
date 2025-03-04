@@ -85,7 +85,7 @@ do
 	echo "new ${index_energy} ${i}"                      >> ${detection_routine}
 	echo "new ${index_width}  ${line_width_energy}"      >> ${detection_routine}
 	echo "new ${index_norm}  "                           >> ${detection_routine}
-	echo "1e-4,0.1,-1e+20,-1e+20,1e+20,1e+24"            >> ${detection_routine}
+	echo "1e-6,0.01,-1e+20,-1e+20,1e+20,1e+24"            >> ${detection_routine}
 	echo "fit"                                           >> ${detection_routine}
 	echo "fit"                                           >> ${detection_routine}
 	echo "fit"                                           >> ${detection_routine}
