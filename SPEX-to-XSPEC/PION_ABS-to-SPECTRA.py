@@ -14,7 +14,7 @@ logxi_vals=np.linspace(0,7,21)
 col_density_vals=np.logspace(-5,1,13)
 # covering fraction of absorbing gas, range between 0 to 1
 fcov_vals=np.linspace(0,1,3)
-# turbulent velocity km/s between 100 to 1e5 km/s
+# turbulent velocity km/s between 1 to 1e4 km/s
 v_vals=np.logspace(0,4,9)
 ### add any parameter you want, otherwise use the default values of PION
 
