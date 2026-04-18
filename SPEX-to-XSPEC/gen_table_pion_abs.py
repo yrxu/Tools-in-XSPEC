@@ -15,6 +15,8 @@ v_vals=np.logspace(0,4,9)
 # covering factor of absorbing gas, range between 0 to 1
 fcov_vals=np.linspace(0,1,3)
 
+outfil="pion_abs_"+ID+".fits"
+
 varnames=["logxi","nh","v", "fcov"]
 lengths=[21,13,9,3]
 Nvars=len(varnames)
